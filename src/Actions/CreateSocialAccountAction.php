@@ -9,10 +9,11 @@ use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Contracts\CreateSocialAccountActionInterface;
+use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 
 class CreateSocialAccountAction implements CreateSocialAccountActionInterface
 {
-    public function execute(Authenticatable $authenticatable, SocialProvider $provider, SocialiteUser $socialUser): Social
+    public function execute(Authenticatable $authenticatable, SocialIdentityProviderInterface $provider, SocialiteUser $socialUser): Social
     {
         return Social::create([
             'socialable_type' => get_class($authenticatable),

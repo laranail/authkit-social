@@ -6,9 +6,10 @@ namespace Simtabi\Laranail\AuthKit\Social\Enums;
 
 use Simtabi\Laranail\Enumerator\Attributes\Label;
 use Simtabi\Laranail\Enumerator\Contracts\Enumerator;
+use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 use Simtabi\Laranail\Enumerator\Concerns\HasEnumerator;
 
-enum SocialProvider: string implements Enumerator
+enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterface
 {
     use HasEnumerator;
 
@@ -76,4 +77,19 @@ enum SocialProvider: string implements Enumerator
                 && filter_var($rawUser['confirmed_email'], FILTER_VALIDATE_EMAIL) !== false,
         };
     }
+
+    /**
+     * The route value, and what is stored against a linked social account.
+     *
+     * Named slug() rather than reusing ->value so the enum and an externally contributed
+     * IdentityProvider answer the same question through the same interface.
+     */
+    public function slug(): string
+    {
+        return $this->value;
+    }
+
+    // label() is not declared here: HasEnumerator already provides it from the #[Label]
+    // attributes, and a method declared on the class would take precedence over the trait's --
+    // silently replacing a working implementation with a broken one.
 }

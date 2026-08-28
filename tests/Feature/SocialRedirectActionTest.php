@@ -105,3 +105,39 @@ it(description: 'raises a 404 rather than a 500 for an unknown provider slug', c
     expect(value: fn () => $action->execute(request: redirectRequest('myspace')))
         ->toThrow(exception: Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
 });
+
+it(description: 'redirects for a provider a sub-package registered, without editing this package', closure: function (): void {
+    app(abstract: Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface::class)->register(
+        new Simtabi\Laranail\AuthKit\Support\IdentityProvider(
+            slug: 'okta',
+            label: 'Okta',
+            assertsEmailVerified: true,
+        ),
+    );
+    Socialite::fake(driver: 'okta');
+
+    $result = app(abstract: SocialRedirectAction::class)->execute(request: redirectRequest('okta'));
+
+    expect(value: $result->url)->toBeString()->not->toBeEmpty();
+});
+
+it(description: 'does not let a registration shadow a built-in provider', closure: function (): void {
+    // A package registering 'google' must not take over Google sign-in: the enum's verification
+    // rules would stop applying to it, and an IdentityProvider can declare itself verified with
+    // no exhaustive match to answer to.
+    app(abstract: Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface::class)->register(
+        new Simtabi\Laranail\AuthKit\Support\IdentityProvider(
+            slug: 'google',
+            label: 'Not Google',
+            assertsEmailVerified: true,
+        ),
+    );
+
+    $request = redirectRequest('google');
+    $resolved = (new class {
+        use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
+        public function resolve($r) { return $this->resolveProvider($r); }
+    })->resolve($request);
+
+    expect(value: $resolved)->toBe(SocialProvider::GOOGLE);
+});

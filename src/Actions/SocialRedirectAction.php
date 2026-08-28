@@ -10,20 +10,22 @@ use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Simtabi\Laranail\AuthKit\Social\Support\SocialRedirectResult;
 use Simtabi\Laranail\AuthKit\Social\Contracts\SocialRedirectActionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
 
 class SocialRedirectAction implements SocialRedirectActionInterface
 {
+    use ResolvesIdentityProvider;
+
     public function __construct(
         private SocialiteFactory $socialite,
     ) {}
 
     public function execute(Request $request): SocialRedirectResult
     {
-        $provider = SocialProvider::tryFrom((string) $request->route('provider'))
-            ?? throw new NotFoundHttpException(message: 'Unknown social provider.');
+        $provider = $this->resolveProvider(request: $request);
 
         return new SocialRedirectResult(
-            url: $this->socialite->driver($provider->value)->redirect()->getTargetUrl(),
+            url: $this->socialite->driver($provider->slug())->redirect()->getTargetUrl(),
         );
     }
 }

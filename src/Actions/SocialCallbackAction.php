@@ -12,9 +12,12 @@ use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Simtabi\Laranail\AuthKit\Social\Contracts\SocialCallbackActionInterface;
 use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
 
 class SocialCallbackAction implements SocialCallbackActionInterface
 {
+    use ResolvesIdentityProvider;
+
     public function __construct(
         private SocialiteFactory $socialite,
         private ResolveSocialIdentityInterface $resolver,
@@ -22,9 +25,8 @@ class SocialCallbackAction implements SocialCallbackActionInterface
 
     public function execute(Request $request, string $guard): AuthResult
     {
-        $provider = SocialProvider::tryFrom((string) $request->route('provider'))
-            ?? throw new NotFoundHttpException(message: 'Unknown social provider.');
-        $socialiteUser = $this->socialite->driver($provider->value)->user();
+        $provider = $this->resolveProvider(request: $request);
+        $socialiteUser = $this->socialite->driver($provider->slug())->user();
 
         $user = $this->resolver->execute(
             provider: $provider,

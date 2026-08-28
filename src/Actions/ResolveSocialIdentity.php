@@ -14,6 +14,7 @@ use Simtabi\Laranail\AuthKit\Support\UserModelResolver;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
 use Simtabi\Laranail\AuthKit\Social\Contracts\CreateSocialAccountActionInterface;
+use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 
 class ResolveSocialIdentity implements ResolveSocialIdentityInterface
 {
@@ -21,10 +22,10 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
         private CreateSocialAccountActionInterface $createSocialAccount,
     ) {}
 
-    public function execute(SocialProvider $provider, SocialiteUser $socialUser, string $guard): ?Authenticatable
+    public function execute(SocialIdentityProviderInterface $provider, SocialiteUser $socialUser, string $guard): ?Authenticatable
     {
         $social = Social::query()
-            ->where('provider', $provider->value)
+            ->where('provider', $provider->slug())
             ->where('provider_id', $socialUser->getId())
             ->first();
 
@@ -79,7 +80,7 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
         return $user;
     }
 
-    private function normalizedVerifiedEmail(SocialProvider $provider, SocialiteUser $socialUser): ?string
+    private function normalizedVerifiedEmail(SocialIdentityProviderInterface $provider, SocialiteUser $socialUser): ?string
     {
         $email = $socialUser->getEmail();
 
@@ -90,12 +91,11 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
         return Str::lower($email);
     }
 
-    private function emailIsVerified(SocialProvider $provider, SocialiteUser $socialUser): bool
+    private function emailIsVerified(SocialIdentityProviderInterface $provider, SocialiteUser $socialUser): bool
     {
-        if (! $provider->assertsEmailVerified()) {
-            return false;
-        }
-
+        // hasVerifiedEmail() is the whole question: a provider that asserts nothing answers
+        // false there whatever the payload claims, whether it is a built-in enum case or one
+        // contributed by a sub-package.
         $rawUser = $socialUser instanceof \Laravel\Socialite\AbstractUser
             ? $socialUser->getRaw()
             : [];
