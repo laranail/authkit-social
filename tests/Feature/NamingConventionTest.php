@@ -43,3 +43,27 @@ it('can still be switched off deliberately', function (): void {
 
     expect(config('laranail.authkit-social.enabled'))->toBeFalse();
 });
+
+/*
+ * Moved here from authkit's PasskeyTest, where a social assertion had been sitting inside the
+ * passkey suite. It asserts the migrations publish under this package now -- the core published the
+ * same tag until the extraction, and exactly one package may own it.
+ */
+it('publishes the social migrations under this package', function (): void {
+    $paths = ServiceProvider::pathsToPublish(
+        provider: \Simtabi\Laranail\AuthKit\Social\Providers\SocialServiceProvider::class,
+        group: 'laranail::authkit-social-migrations',
+    );
+
+    expect(array_map('realpath', array_keys($paths)))
+        ->toContain(realpath(dirname(__DIR__, 2) . '/database/migrations/social'));
+});
+
+it('is the only package publishing that tag', function (): void {
+    $fromCore = ServiceProvider::pathsToPublish(
+        provider: \Simtabi\Laranail\AuthKit\Providers\AuthKitServiceProvider::class,
+        group: 'laranail::authkit-social-migrations',
+    );
+
+    expect($fromCore)->toBe([]);
+});

@@ -2,4 +2,4 @@
 
 declare(strict_types=1);
 
-uses(Tests\TestCase::class)->in('Feature');
+uses(Simtabi\Laranail\AuthKit\Social\Tests\TestCase::class)->in('Feature');

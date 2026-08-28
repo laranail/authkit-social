@@ -9,6 +9,14 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **Social login, extracted from `laranail/authkit`.** Fifteen classes, the `socials` migration and
+  its factory, plus the provider credential block that was `laranail.authkit.social` and is now
+  `laranail.authkit-social`. Provider env variable names are unchanged.
+
+  The two abstract controllers gained an explicit
+  `use Simtabi\Laranail\AuthKit\Http\Controllers\AbstractAuthController;`. They previously resolved
+  it by same-namespace lookup, which the move breaks — silently, because the file still parses.
+
 - Package skeleton: service provider, vendor-scoped config key and publish tag, CI, and the
   naming-convention guard every laranail package carries.
 
