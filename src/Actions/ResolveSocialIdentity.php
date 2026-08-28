@@ -92,7 +92,7 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
 
     private function emailIsVerified(SocialProvider $provider, SocialiteUser $socialUser): bool
     {
-        if (! $provider->assertsVerifiedEmail()) {
+        if (! $provider->assertsEmailVerified()) {
             return false;
         }
 
@@ -100,11 +100,7 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
             ? $socialUser->getRaw()
             : [];
 
-        if (! is_array($rawUser)) {
-            return false;
-        }
-
-        return filter_var($rawUser['email_verified'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        return is_array($rawUser) && $provider->hasVerifiedEmail($rawUser);
     }
 
     private function findUserByEmail(string $userModel, ?string $email): ?Authenticatable

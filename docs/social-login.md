@@ -4,15 +4,25 @@ Auth Kit integrates Laravel Socialite but does not register routes or render but
 
 ## Supported providers and setup
 
-| Provider | Route value | Provider-console callback                             | Required environment prefix | Verified email trusted for auto-linking |
-|----------|-------------|-------------------------------------------------------|-----------------------------|-----------------------------------------|
-| Google   | `google`    | `https://your-app.test/auth/social/google/callback`   | `AUTHKIT_GOOGLE_`          | Yes                                     |
-| Facebook | `facebook`  | `https://your-app.test/auth/social/facebook/callback` | `AUTHKIT_FACEBOOK_`        | No                                      |
-| X        | `twitter`   | `https://your-app.test/auth/social/twitter/callback`  | `AUTHKIT_TWITTER_`         | No                                      |
-| LinkedIn | `linkedin`  | `https://your-app.test/auth/social/linkedin/callback` | `AUTHKIT_LINKEDIN_`        | Yes                                     |
-| PayPal   | `paypal`    | `https://your-app.test/auth/social/paypal/callback`   | `AUTHKIT_PAYPAL_`          | Yes                                     |
+| Provider | Route value | Provider-console callback                            | Required environment prefix | Verification claim |
+|----------|-------------|------------------------------------------------------|-----------------------------|--------------------|
+| Google   | `google`    | `https://your-app.test/auth/social/google/callback`  | `AUTHKIT_GOOGLE_`          | `email_verified`   |
+| X        | `twitter`   | `https://your-app.test/auth/social/twitter/callback` | `AUTHKIT_TWITTER_`         | `confirmed_email`  |
+| LinkedIn | `linkedin`  | `https://your-app.test/auth/social/linkedin/callback`| `AUTHKIT_LINKEDIN_`        | `email_verified`   |
+| PayPal   | `paypal`    | `https://your-app.test/auth/social/paypal/callback`  | `AUTHKIT_PAYPAL_`          | `email_verified`   |
 
-Create an OAuth application in the provider's developer console, add the exact callback URL used by your application, then set its credentials. Google, LinkedIn, and PayPal request OpenID, profile, and email scopes; Facebook requests email and public profile; X requests user and email access. Provider approval, app mode, and email-access requirements remain provider-specific.
+Every shipped provider asserts that it verified the address it returns, so all four can
+auto-link. They do it with different claims: the OpenID-style three return a boolean
+`email_verified`, while X returns the confirmed address itself as `confirmed_email` and
+omits the field when the address is unconfirmed. Each provider reads its own claim, so a
+payload carrying the wrong key never counts as verification.
+
+Facebook is deliberately absent. It returns no verification flag at all — only an
+inference from its documentation — and an address that cannot be shown to be verified must
+never link, because anyone able to register an account carrying someone else's address
+would otherwise take over that account.
+
+Create an OAuth application in the provider's developer console, add the exact callback URL used by your application, then set its credentials. Google, LinkedIn, and PayPal request OpenID, profile, and email scopes. X requests `users.read`, `users.email`, and `tweet.read`, and returns `confirmed_email` only when "Request email from users" is enabled on the app in X's developer dashboard — without it the address is absent and no X login can link. Provider approval, app mode, and email-access requirements remain provider-specific.
 
 ```env
 AUTHKIT_GOOGLE_CLIENT_ID=
@@ -20,7 +30,7 @@ AUTHKIT_GOOGLE_CLIENT_SECRET=
 AUTHKIT_GOOGLE_REDIRECT="${APP_URL}/auth/social/google/callback"
 ```
 
-Replace `GOOGLE` with `FACEBOOK`, `TWITTER`, `LINKEDIN`, or `PAYPAL` for the other providers. PayPal is sandboxed by default; set `AUTHKIT_PAYPAL_SANDBOX_MODE=false` only when both the callback and credentials are production values. Clear Laravel's configuration cache after changing environment values.
+Replace `GOOGLE` with `TWITTER`, `LINKEDIN`, or `PAYPAL` for the other providers. PayPal is sandboxed by default; set `AUTHKIT_PAYPAL_SANDBOX_MODE=false` only when both the callback and credentials are production values. Clear Laravel's configuration cache after changing environment values.
 
 ## Routes, controllers, and persistence
 
@@ -53,15 +63,15 @@ Register a redirect route and callback route whose `{provider}` value is restric
 
 1. An existing provider/provider-ID record is reused and its token metadata is refreshed.
 2. If a user is already authenticated, the provider identity is linked to that user.
-3. For a guest, a matching local email is linked only when the provider supplied a trusted `email_verified` claim.
+3. For a guest, a matching local email is linked only when the provider asserted it verified that address.
 4. A guest with a trusted verified email and no local account gets a new local account, marked verified, plus a social record.
-5. A missing email, an unverified email, or an existing matching account without a trusted verification claim fails the callback; it never silently links the account.
+5. A missing email, an unverified email, or an existing matching account without a verification claim fails the callback; it never silently links the account. An unrecognised provider slug returns a 404.
 
-Only Google, LinkedIn, and PayPal are currently trusted for `email_verified`. Facebook and X identities can be linked from an authenticated account, but they cannot create or auto-link an account by email. This deliberately prevents a provider email claim from becoming an account-takeover path.
+Trust is declared per provider on the `SocialProvider` enum: `assertsEmailVerified()` says whether a provider asserts verification at all, and `hasVerifiedEmail()` reads that provider's own claim out of the raw payload. Both matches are exhaustive, so adding a case forces an explicit decision rather than inheriting one. This is what keeps a provider's email claim from becoming an account-takeover path.
 
 ## Adding a provider
 
-The accepted route values are the `SocialProvider` enum cases. Adding a provider requires a package change: add its enum case, add its credentials, redirect, and scopes under `laranail.authkit.social`, and ensure Socialite has a driver for that key. First-party Socialite drivers work through the normal `services.<provider>` configuration; a third-party driver must be registered with Socialite's extension mechanism, as PayPal is. Add callback tests for an existing identity, a trusted verified email, an unverified or missing email, and authenticated linking before exposing the new provider.
+The accepted route values are the `SocialProvider` enum cases. Adding a provider requires a package change: add its enum case with an arm in both `assertsEmailVerified()` and `hasVerifiedEmail()`, add its credentials, redirect, and scopes under `laranail.authkit-social`, and ensure Socialite has a driver for that key. First-party Socialite drivers work through the normal `services.<provider>` configuration; a third-party driver must be registered with Socialite's extension mechanism, as PayPal is. Add callback tests for an existing identity, a verified email, an unverified or missing email, and authenticated linking before exposing the new provider.
 
 ---
 

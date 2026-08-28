@@ -48,7 +48,7 @@ the naming guard means the conventions cannot quietly rot before there is code t
 
 ## Scope
 
-- Socialite-backed providers — Google, Facebook, Twitter, LinkedIn, and a custom PayPal driver
+- Socialite-backed providers — Google, X, LinkedIn, and a custom PayPal driver
 - The redirect and callback halves of the OAuth consumer flow, as overridable abstract controllers
 - Identity linking and just-in-time provisioning, including the `email_verified` matrix that decides
   when a social identity may attach to an existing account

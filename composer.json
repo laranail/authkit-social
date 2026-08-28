@@ -10,8 +10,7 @@
         "social-login",
         "socialite",
         "oauth",
-        "google",
-        "facebook"
+        "google"
     ],
     "license": "MIT",
     "homepage": "https://opensource.simtabi.com/products/laranail/authkit-social",

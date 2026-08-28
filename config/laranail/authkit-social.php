@@ -49,12 +49,6 @@ return [
         'scopes'        => ['openid', 'profile', 'email'],
     ],
 
-    'facebook' => [
-        'client_id'     => env(key: 'AUTHKIT_FACEBOOK_CLIENT_ID'),
-        'client_secret' => env(key: 'AUTHKIT_FACEBOOK_CLIENT_SECRET'),
-        'redirect'      => env(key: 'AUTHKIT_FACEBOOK_REDIRECT'),
-        'scopes'        => ['email', 'public_profile'],
-    ],
 
     'twitter' => [
         'client_id'     => env(key: 'AUTHKIT_TWITTER_CLIENT_ID'),

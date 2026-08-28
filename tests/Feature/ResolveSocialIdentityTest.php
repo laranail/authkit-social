@@ -144,19 +144,6 @@ it('does not treat a string false verification claim as verified', function (): 
         ->and(Social::query()->count())->toBe(0);
 });
 
-it('does not trust an email verification claim from Facebook', function (): void {
-    User::factory()->create(['email' => 'john@example.com']);
-
-    $user = app(ResolveSocialIdentity::class)->execute(
-        provider: SocialProvider::FACEBOOK,
-        socialUser: socialiteUser(['email_verified' => true]),
-        guard: 'web',
-    );
-
-    expect($user)->toBeNull()
-        ->and(Social::query()->count())->toBe(0);
-});
-
 it('accepts LinkedIns documented email verification claim', function (): void {
     $user = app(ResolveSocialIdentity::class)->execute(
         provider: SocialProvider::LINKEDIN,
@@ -229,18 +216,29 @@ it('links social account to authenticated user', function (): void {
         ->and(Social::first()->socialable_id)->toBe($authUser->getAuthIdentifier());
 });
 
-it('never auto-links for a provider that does not assert verification, even when the payload claims it', function (): void {
+it('accepts the confirmed address X returns as its verification claim', function (): void {
+    $user = app(ResolveSocialIdentity::class)->execute(
+        provider: SocialProvider::TWITTER,
+        socialUser: socialiteUser(['confirmed_email' => 'john@example.com']),
+        guard: 'web',
+    );
+
+    expect($user)->not->toBeNull()
+        ->and($user->email)->toBe('john@example.com');
+});
+
+it('reads each provider’s own claim, so X is unverified without confirmed_email', function (): void {
     User::factory()->create(['email' => 'john@example.com']);
 
-    foreach ([SocialProvider::FACEBOOK, SocialProvider::TWITTER] as $provider) {
-        $user = app(ResolveSocialIdentity::class)->execute(
-            provider: $provider,
-            socialUser: socialiteUser(['email_verified' => true]),
-            guard: 'web',
-        );
+    // The shared payload carries email_verified: true. X does not use that claim -- it
+    // omits confirmed_email altogether when the address is unconfirmed -- so trusting
+    // the wrong key here would hand an account over on a claim X never made.
+    $user = app(ResolveSocialIdentity::class)->execute(
+        provider: SocialProvider::TWITTER,
+        socialUser: socialiteUser(),
+        guard: 'web',
+    );
 
-        expect($user)->toBeNull();
-    }
-
-    expect(Social::query()->count())->toBe(0);
+    expect($user)->toBeNull()
+        ->and(Social::query()->count())->toBe(0);
 });
