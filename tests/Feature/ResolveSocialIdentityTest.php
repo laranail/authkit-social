@@ -228,3 +228,19 @@ it('links social account to authenticated user', function (): void {
         ->and(Social::query()->count())->toBe(1)
         ->and(Social::first()->socialable_id)->toBe($authUser->getAuthIdentifier());
 });
+
+it('never auto-links for a provider that does not assert verification, even when the payload claims it', function (): void {
+    User::factory()->create(['email' => 'john@example.com']);
+
+    foreach ([SocialProvider::FACEBOOK, SocialProvider::TWITTER] as $provider) {
+        $user = app(ResolveSocialIdentity::class)->execute(
+            provider: $provider,
+            socialUser: socialiteUser(['email_verified' => true]),
+            guard: 'web',
+        );
+
+        expect($user)->toBeNull();
+    }
+
+    expect(Social::query()->count())->toBe(0);
+});

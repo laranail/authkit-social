@@ -98,3 +98,10 @@ it('validates social provider values with Enumerator', function (): void {
             rules: ['provider' => [new EnumValue(SocialProvider::class)]],
         )->fails())->toBeTrue();
 });
+
+it(description: 'raises a 404 rather than a 500 for an unknown provider slug', closure: function (): void {
+    $action = app(abstract: SocialRedirectAction::class);
+
+    expect(value: fn () => $action->execute(request: redirectRequest('myspace')))
+        ->toThrow(exception: Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+});

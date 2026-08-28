@@ -92,7 +92,7 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
 
     private function emailIsVerified(SocialProvider $provider, SocialiteUser $socialUser): bool
     {
-        if (! in_array($provider, [SocialProvider::GOOGLE, SocialProvider::LINKEDIN, SocialProvider::PAYPAL], true)) {
+        if (! $provider->assertsVerifiedEmail()) {
             return false;
         }
 

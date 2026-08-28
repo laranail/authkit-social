@@ -94,3 +94,10 @@ it('returns failed when socialite user has no email', function (): void {
 
     expect($result->isPassed())->toBeFalse();
 });
+
+it(description: 'raises a 404 rather than a 500 for an unknown provider slug', closure: function (): void {
+    $action = app(abstract: SocialCallbackAction::class);
+
+    expect(value: fn () => $action->execute(request: callbackRequest('myspace'), guard: 'web'))
+        ->toThrow(exception: Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+});

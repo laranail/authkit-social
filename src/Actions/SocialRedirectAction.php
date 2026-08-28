@@ -9,6 +9,7 @@ use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Simtabi\Laranail\AuthKit\Social\Support\SocialRedirectResult;
 use Simtabi\Laranail\AuthKit\Social\Contracts\SocialRedirectActionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class SocialRedirectAction implements SocialRedirectActionInterface
 {
@@ -18,7 +19,8 @@ class SocialRedirectAction implements SocialRedirectActionInterface
 
     public function execute(Request $request): SocialRedirectResult
     {
-        $provider = SocialProvider::from(value: $request->route('provider'));
+        $provider = SocialProvider::tryFrom((string) $request->route('provider'))
+            ?? throw new NotFoundHttpException(message: 'Unknown social provider.');
 
         return new SocialRedirectResult(
             url: $this->socialite->driver($provider->value)->redirect()->getTargetUrl(),
