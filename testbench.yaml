@@ -1,0 +1,2 @@
+providers:
+  - Simtabi\Laranail\AuthKit\Social\Providers\SocialServiceProvider
