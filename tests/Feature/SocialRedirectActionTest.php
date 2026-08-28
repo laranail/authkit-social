@@ -29,6 +29,16 @@ it(description: 'returns redirect url for google', closure: function (): void {
     expect(value: $result->url)->toBeString()->not->toBeEmpty();
 });
 
+it(description: 'returns redirect url for apple', closure: function (): void {
+    Socialite::fake(driver: SocialProvider::APPLE->value);
+
+    $action = app(abstract: SocialRedirectAction::class);
+
+    $result = $action->execute(request: redirectRequest('apple'));
+
+    expect(value: $result->url)->toBeString()->not->toBeEmpty();
+});
+
 it(description: 'returns redirect url for twitter', closure: function (): void {
     Socialite::fake(driver: SocialProvider::TWITTER->value);
 
@@ -62,12 +72,14 @@ it(description: 'returns redirect url for paypal', closure: function (): void {
 it('exposes Enumerator labels and collection helpers without changing provider values', function (): void {
     expect(SocialProvider::values())->toBe([
         'google',
+        'apple',
         'twitter',
         'linkedin',
         'paypal',
     ])
         ->and(SocialProvider::labels())->toBe([
             'google'   => 'Google',
+            'apple'   => 'Apple',
             'twitter'  => 'X (Twitter)',
             'linkedin' => 'LinkedIn',
             'paypal'   => 'PayPal',

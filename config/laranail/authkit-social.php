@@ -49,6 +49,20 @@ return [
         'scopes'        => ['openid', 'profile', 'email'],
     ],
 
+    /*
+     * Apple's client_secret is not a static string: it is a short-lived ES256 JWT signed
+     * with the .p8 key from your Apple developer account, and Apple caps its lifetime at
+     * six months. Generate it out of band and rotate it before it expires, or every Apple
+     * sign-in starts failing on a date nothing in this repository records.
+     *
+     * The client_id is the Services ID, not the App ID.
+     */
+    'apple' => [
+        'client_id'     => env(key: 'AUTHKIT_APPLE_CLIENT_ID'),
+        'client_secret' => env(key: 'AUTHKIT_APPLE_CLIENT_SECRET'),
+        'redirect'      => env(key: 'AUTHKIT_APPLE_REDIRECT'),
+        'scopes'        => ['name', 'email'],
+    ],
 
     'twitter' => [
         'client_id'     => env(key: 'AUTHKIT_TWITTER_CLIENT_ID'),

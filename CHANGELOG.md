@@ -7,6 +7,20 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **Apple as a provider** (`SocialProvider::APPLE`), through `socialiteproviders/apple`. It asserts
+  `email_verified` like the other OpenID-style providers, so it can auto-link, and it routinely sends
+  that claim as the string `"true"` rather than a boolean — covered by a test, because a stricter
+  reader would silently reject every Apple sign-in.
+
+  Apple needs three things the others do not, all documented in `docs/social-login.md`: the
+  `client_id` is the Services ID rather than the App ID; the `client_secret` is a short-lived ES256
+  JWT that Apple caps at six months and that must be rotated out of band; and because it requests the
+  `name` and `email` scopes it replies with `response_mode=form_post`, so it **POSTs** the callback.
+  A GET-only or CSRF-protected callback route answers Apple with a 405 or a 419 and the sign-in dies
+  silently. `laranail/authkit-preset` registers the route accordingly.
+
 ### Removed
 
 - **`SocialProvider::FACEBOOK`, and its config block.** Breaking for anyone referencing the case or

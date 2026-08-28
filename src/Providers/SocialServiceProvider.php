@@ -10,6 +10,7 @@ use Simtabi\Laranail\AuthKit\Social\Actions;
 use Simtabi\Laranail\AuthKit\Social\Services;
 use Simtabi\Laranail\AuthKit\Social\Contracts;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use SocialiteProviders\Apple\AppleExtendSocialite;
 use Simtabi\Laranail\Package\Tools\Providers\PackageServiceProvider;
 
 /**
@@ -68,6 +69,7 @@ class SocialServiceProvider extends PackageServiceProvider
 
         $this->publishProviderCredentials();
         $this->registerPayPalProvider();
+        $this->registerAppleProvider();
     }
 
     /**
@@ -96,6 +98,21 @@ class SocialServiceProvider extends PackageServiceProvider
                     providerClass: Services\PayPalSocialProvider::class,
                 );
             },
+        );
+    }
+
+    /**
+     * Apple ships its own Socialite extension, so this only wires the listener up.
+     *
+     * Registering it here rather than relying on the package's auto-discovery keeps every
+     * driver this package owns visible in one place, and keeps the listener bound even when
+     * the consuming application has disabled package discovery.
+     */
+    private function registerAppleProvider(): void
+    {
+        Event::listen(
+            events: SocialiteWasCalled::class,
+            listener: [AppleExtendSocialite::class, 'handle'],
         );
     }
 }

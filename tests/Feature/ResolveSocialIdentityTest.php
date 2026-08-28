@@ -242,3 +242,29 @@ it('reads each provider’s own claim, so X is unverified without confirmed_emai
     expect($user)->toBeNull()
         ->and(Social::query()->count())->toBe(0);
 });
+
+it('accepts the string email_verified Apple sends rather than a real boolean', function (): void {
+    $existingUser = User::factory()->create(['email' => 'john@example.com']);
+
+    $user = app(ResolveSocialIdentity::class)->execute(
+        provider: SocialProvider::APPLE,
+        socialUser: socialiteUser(['email_verified' => 'true']),
+        guard: 'web',
+    );
+
+    expect($user->getAuthIdentifier())->toBe($existingUser->getAuthIdentifier())
+        ->and(Social::query()->count())->toBe(1);
+});
+
+it('does not link an Apple identity whose email_verified is the string false', function (): void {
+    User::factory()->create(['email' => 'john@example.com']);
+
+    $user = app(ResolveSocialIdentity::class)->execute(
+        provider: SocialProvider::APPLE,
+        socialUser: socialiteUser(['email_verified' => 'false']),
+        guard: 'web',
+    );
+
+    expect($user)->toBeNull()
+        ->and(Social::query()->count())->toBe(0);
+});
