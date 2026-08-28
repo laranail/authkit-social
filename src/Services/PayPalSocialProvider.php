@@ -98,7 +98,7 @@ class PayPalSocialProvider extends AbstractProvider
 
     protected function mapUserToObject(array $user): User
     {
-        return (new User())
+        return (new User)
             ->setRaw(user: $user)
             ->map(attributes: [
                 'id'         => basename(path: $user['user_id']),

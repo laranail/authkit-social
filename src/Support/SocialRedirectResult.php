@@ -8,6 +8,5 @@ class SocialRedirectResult
 {
     public function __construct(
         public string $url,
-    ) {
-    }
+    ) {}
 }

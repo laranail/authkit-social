@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\AuthKit\Social\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Database\Factories\SocialFactory;
 
 class Social extends Model
@@ -31,7 +31,7 @@ class Social extends Model
 
     public static function newFactory(): SocialFactory
     {
-        return new SocialFactory();
+        return new SocialFactory;
     }
 
     public function socialable(): MorphTo

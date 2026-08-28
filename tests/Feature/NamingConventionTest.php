@@ -51,7 +51,7 @@ it('can still be switched off deliberately', function (): void {
  */
 it('publishes the social migrations under this package', function (): void {
     $paths = ServiceProvider::pathsToPublish(
-        provider: \Simtabi\Laranail\AuthKit\Social\Providers\SocialServiceProvider::class,
+        provider: Simtabi\Laranail\AuthKit\Social\Providers\SocialServiceProvider::class,
         group: 'laranail::authkit-social-migrations',
     );
 
@@ -61,7 +61,7 @@ it('publishes the social migrations under this package', function (): void {
 
 it('is the only package publishing that tag', function (): void {
     $fromCore = ServiceProvider::pathsToPublish(
-        provider: \Simtabi\Laranail\AuthKit\Providers\AuthKitServiceProvider::class,
+        provider: Simtabi\Laranail\AuthKit\Providers\AuthKitServiceProvider::class,
         group: 'laranail::authkit-social-migrations',
     );
 

@@ -17,8 +17,7 @@ class SocialCallbackAction implements SocialCallbackActionInterface
     public function __construct(
         private SocialiteFactory $socialite,
         private ResolveSocialIdentityInterface $resolver,
-    ) {
-    }
+    ) {}
 
     public function execute(Request $request, string $guard): AuthResult
     {

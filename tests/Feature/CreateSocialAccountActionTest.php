@@ -3,15 +3,15 @@
 declare(strict_types=1);
 
 use Workbench\App\Models\User;
-use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Actions\CreateSocialAccountAction;
 
 it(description: 'creates a social account with morph', closure: function (): void {
     $user = User::factory()->create();
 
-    $socialiteUser = new SocialiteUser();
+    $socialiteUser = new SocialiteUser;
     $socialiteUser->map(attributes: [
         'id'       => 'google-123',
         'name'     => 'John Doe',
@@ -46,7 +46,7 @@ it(description: 'creates a social account with morph', closure: function (): voi
 it(description: 'morph relationship returns parent model', closure: function (): void {
     $user = User::factory()->create();
 
-    $socialiteUser = new SocialiteUser();
+    $socialiteUser = new SocialiteUser;
     $socialiteUser->map(attributes: [
         'id'    => 'google-456',
         'email' => 'jane@example.com',
@@ -66,7 +66,7 @@ it(description: 'morph relationship returns parent model', closure: function ():
 it(description: 'stores encrypted tokens', closure: function (): void {
     $user = User::factory()->create();
 
-    $socialiteUser = new SocialiteUser();
+    $socialiteUser = new SocialiteUser;
     $socialiteUser->map(attributes: [
         'id'    => 'google-789',
         'email' => 'token@example.com',
@@ -92,7 +92,7 @@ it(description: 'stores encrypted tokens', closure: function (): void {
 it(description: 'handles null expires_at', closure: function (): void {
     $user = User::factory()->create();
 
-    $socialiteUser = new SocialiteUser();
+    $socialiteUser = new SocialiteUser;
     $socialiteUser->map(attributes: [
         'id'    => 'google-no-exp',
         'email' => 'noexpire@example.com',

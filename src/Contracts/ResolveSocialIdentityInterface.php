@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\AuthKit\Social\Contracts;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 
 interface ResolveSocialIdentityInterface
 {

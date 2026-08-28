@@ -7,11 +7,11 @@ namespace Simtabi\Laranail\AuthKit\Social\Actions;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Model;
-use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Simtabi\Laranail\AuthKit\Support\UserModelResolver;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
 use Simtabi\Laranail\AuthKit\Social\Contracts\CreateSocialAccountActionInterface;
 
@@ -19,8 +19,7 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
 {
     public function __construct(
         private CreateSocialAccountActionInterface $createSocialAccount,
-    ) {
-    }
+    ) {}
 
     public function execute(SocialProvider $provider, SocialiteUser $socialUser, string $guard): ?Authenticatable
     {
@@ -120,7 +119,7 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
     private function createUser(string $userModel, SocialiteUser $socialUser, string $email): Authenticatable
     {
         /** @var Model&Authenticatable $user */
-        $user = new $userModel();
+        $user = new $userModel;
         $user->forceFill([
             'name'              => $socialUser->getName() ?? $socialUser->getNickname() ?? '',
             'email'             => $email,

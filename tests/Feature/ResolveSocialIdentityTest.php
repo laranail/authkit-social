@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use Workbench\App\Models\User;
-use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Actions\ResolveSocialIdentity;
 
@@ -19,7 +19,7 @@ function socialiteUser(array $overrides = []): SocialiteUser
         'email_verified' => true,
     ], $overrides);
 
-    $user = new SocialiteUser();
+    $user = new SocialiteUser;
     $user->setRaw($raw);
     $user->map($raw);
     $user->token = 'mock-token';
@@ -39,7 +39,7 @@ function socialiteUserWithoutVerification(): SocialiteUser
         'avatar'   => 'https://example.com/avatar.jpg',
     ];
 
-    $user = new SocialiteUser();
+    $user = new SocialiteUser;
     $user->setRaw($raw);
     $user->map($raw);
     $user->token = 'mock-token';

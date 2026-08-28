@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Http\Controllers;
 
-use Simtabi\Laranail\AuthKit\Http\Controllers\AbstractAuthController;
 use Illuminate\Http\Request;
+use Simtabi\Laranail\AuthKit\Http\Controllers\AbstractAuthController;
 use Simtabi\Laranail\AuthKit\Social\Contracts\SocialRedirectActionInterface;
 
 abstract class AbstractSocialRedirectController extends AbstractAuthController

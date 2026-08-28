@@ -77,6 +77,5 @@ return [
         'sandbox_mode'  => (bool) env(key: 'AUTHKIT_PAYPAL_SANDBOX_MODE', default: true),
         'scopes'        => ['openid', 'profile', 'email'],
     ],
-    
 
 ];

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Http\Controllers;
 
-use Simtabi\Laranail\AuthKit\Http\Controllers\AbstractAuthController;
 use Illuminate\Http\Request;
 use Simtabi\Laranail\AuthKit\Support\AuthKit;
 use Simtabi\Laranail\AuthKit\Enums\AuthStatus;
 use Simtabi\Laranail\AuthKit\Support\AuthResult;
 use Simtabi\Laranail\AuthKit\Contracts\LoginUserInterface;
+use Simtabi\Laranail\AuthKit\Http\Controllers\AbstractAuthController;
 use Simtabi\Laranail\AuthKit\Social\Contracts\SocialCallbackActionInterface;
 
 abstract class AbstractSocialCallbackController extends AbstractAuthController

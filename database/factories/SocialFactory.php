@@ -7,8 +7,8 @@ namespace Simtabi\Laranail\AuthKit\Social\Database\Factories;
 use Illuminate\Support\Str;
 use Workbench\App\Models\User;
 use Simtabi\Laranail\AuthKit\Social\Models\Social;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\Simtabi\Laranail\AuthKit\Models\Social>

@@ -6,15 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Workbench\App\Models\User;
 use Laravel\Socialite\Facades\Socialite;
-use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Actions\SocialCallbackAction;
 
 function callbackRequest(string $provider): Request
 {
     $request = Request::create(uri: "/auth/social/{$provider}/callback", method: 'GET');
-    $request->setRouteResolver(fn () => (new Route('GET', "/auth/social/{provider}/callback", []))->bind($request));
+    $request->setRouteResolver(fn () => (new Route('GET', '/auth/social/{provider}/callback', []))->bind($request));
     $request->route()->setParameter('provider', $provider);
 
     return $request;
@@ -30,7 +30,7 @@ beforeEach(function (): void {
         'email_verified' => true,
     ];
 
-    $this->socialiteUser = new SocialiteUser();
+    $this->socialiteUser = new SocialiteUser;
     $this->socialiteUser->setRaw($rawUser);
     $this->socialiteUser->map($rawUser);
     $this->socialiteUser->token = 'mock-token';
@@ -76,7 +76,7 @@ it('returns existing user when social account already exists', function (): void
 });
 
 it('returns failed when socialite user has no email', function (): void {
-    $noEmailUser = new SocialiteUser();
+    $noEmailUser = new SocialiteUser;
     $noEmailUser->map([
         'id'       => '123456789',
         'name'     => 'No Email',

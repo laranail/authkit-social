@@ -13,7 +13,7 @@ use Simtabi\Laranail\AuthKit\Social\Actions\SocialRedirectAction;
 function redirectRequest(string $provider): Request
 {
     $request = Request::create(uri: "/auth/social/{$provider}", method: 'GET');
-    $request->setRouteResolver(fn () => (new Route('GET', "/auth/social/{provider}", []))->bind($request));
+    $request->setRouteResolver(fn () => (new Route('GET', '/auth/social/{provider}', []))->bind($request));
     $request->route()->setParameter('provider', $provider);
 
     return $request;
