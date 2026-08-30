@@ -39,7 +39,7 @@ it(description: 'creates a social account with morph', closure: function (): voi
         ->and(value: $social->name)->toBe('John Doe')
         ->and(value: $social->nickname)->toBe('johndoe')
         ->and(value: $social->email)->toBe('john@example.com')
-        ->and(value: $social->avatar_path)->toBe('https://example.com/avatar.jpg')
+        ->and(value: $social->avatar_url)->toBe('https://example.com/avatar.jpg')
         ->and(value: $social->expires_at)->not->toBeNull();
 });
 

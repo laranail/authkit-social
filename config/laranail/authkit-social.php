@@ -58,6 +58,29 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | Unlinking a provider
+    |--------------------------------------------------------------------------
+    |
+    | Removing a linked provider is the one social operation that can lock someone out permanently,
+    | so by default the last remaining link cannot be removed.
+    |
+    | The obvious alternative -- allow it when the user has a password -- does not work here. Social
+    | provisioning writes Hash::make(Str::random(32)), a password the user has never seen, so the
+    | column is populated for exactly the accounts most at risk and nothing in a hash tells a chosen
+    | password from a generated one.
+    |
+    | An application that records whether a password was actually chosen can answer that question and
+    | set this to true. Everyone else should leave it alone: a user who wants to remove their only
+    | provider sets a password first through the ordinary reset flow.
+    |
+    */
+
+    'unlink' => [
+        'trust_password_column' => (bool) env(key: 'AUTHKIT_SOCIAL_UNLINK_TRUSTS_PASSWORD', default: false),
+    ],
+
     'api' => [
         'enabled' => (bool) env(key: 'AUTHKIT_SOCIAL_API_ENABLED', default: false),
     ],

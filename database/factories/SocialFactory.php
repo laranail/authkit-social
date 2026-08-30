@@ -29,7 +29,7 @@ class SocialFactory extends Factory
             'name'            => fake()->name(),
             'nickname'        => fake()->name(),
             'email'           => fake()->email(),
-            'avatar_path'     => fake()->imageUrl(),
+            'avatar_url'      => fake()->imageUrl(),
             'token'           => Str::random(length: 240),
             'refresh_token'   => Str::random(length: 240),
             'expires_at'      => now()->addSeconds(3600),

@@ -23,7 +23,7 @@ class CreateSocialAccountAction implements CreateSocialAccountActionInterface
             'name'            => $socialUser->getName(),
             'nickname'        => $socialUser->getNickname(),
             'email'           => $socialUser->getEmail(),
-            'avatar_path'     => $socialUser->getAvatar(),
+            'avatar_url'      => $socialUser->getAvatar(),
             'token'           => $socialUser->token,
             'refresh_token'   => $socialUser->refreshToken,
             'expires_at'      => $socialUser->expiresIn

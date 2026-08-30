@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string(column: 'name')->nullable();
             $table->string(column: 'nickname')->nullable();
             $table->string(column: 'email')->nullable();
-            $table->text(column: 'avatar_path')->nullable();
+            // A remote URL from the provider, not a stored file -- see the rename migration.
+            $table->text(column: 'avatar_url')->nullable();
             $table->string(column: 'token', length: 4000)->nullable();
             $table->string(column: 'refresh_token', length: 4000)->nullable();
             $table->dateTime(column: 'expires_at')->nullable();

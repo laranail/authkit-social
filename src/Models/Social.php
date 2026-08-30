@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Database\Factories\SocialFactory;
+use Simtabi\Laranail\AuthKit\Social\Casts\IdentityProviderCast;
 
 class Social extends Model
 {
@@ -23,7 +24,7 @@ class Social extends Model
         'name',
         'nickname',
         'email',
-        'avatar_path',
+        'avatar_url',
         'token',
         'refresh_token',
         'expires_at',
@@ -43,7 +44,7 @@ class Social extends Model
     protected function casts(): array
     {
         return [
-            'provider'      => SocialProvider::class,
+            'provider'      => IdentityProviderCast::class,
             'token'         => 'encrypted',
             'refresh_token' => 'encrypted',
             'expires_at'    => 'immutable_datetime',

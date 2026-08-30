@@ -7,7 +7,42 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- **A registry-contributed provider could not be signed in with.** `Social::$casts` cast `provider`
+  straight to the `SocialProvider` enum, so storing or reading a slug with no enum case threw
+  `ValueError: "okta" is not a valid backing value`. A sub-package could register a provider, render
+  its button and bind its Socialite driver — and then the first person to actually use it made the
+  row unreadable. The seam worked right up to the point of being used.
+
+  `IdentityProviderCast` resolves through the enum first and the registry second, and returns an
+  unresolvable slug as a plain string rather than throwing: a sub-package can be removed while its
+  rows remain, and such a link should still be listable and unlinkable rather than poisoning the
+  whole account.
+
+### Changed
+
+- **`socials.avatar_path` is now `socials.avatar_url`.** It never held a path. The column is written
+  from `$socialUser->getAvatar()`, which every provider returns as a remote URL, and nothing ever
+  downloaded a file — so the name described an intention that was not implemented, and a reader
+  taking it at face value would render it as a local asset. A rename migration ships with it; the
+  value is unchanged.
+
 ### Added
+
+- **Unlinking a social account** (`UnlinkSocialAccountInterface`, `SocialAccountService`), with the
+  rule that matters: the **last remaining link cannot be removed**.
+
+  The obvious rule — allow it when the user has a password — fails in the dangerous direction.
+  `ResolveSocialIdentity` provisions a social account with `Hash::make(Str::random(32))`, a password
+  the user has never seen, and Laravel's schema makes the column NOT NULL, so it is populated for
+  exactly the accounts most at risk. Nothing in a hash distinguishes a chosen password from a
+  generated one, so this package does not guess. An application that records whether a password was
+  actually chosen can lift the restriction with
+  `laranail.authkit-social.unlink.trust_password_column`.
+
+  `canUnlink()` is exposed separately so a UI can disable the control and explain, rather than
+  offering an action that then refuses.
 
 - **Social sign-in for clients with no session** (`AUTHKIT_SOCIAL_API_ENABLED`, off by default).
   `GET /api/auth/social/{provider}/redirect` hands the client a URL to open;

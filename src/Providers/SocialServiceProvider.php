@@ -74,6 +74,11 @@ class SocialServiceProvider extends PackageServiceProvider
             concrete: Actions\StatelessSocialCallback::class,
         );
 
+        $this->app->bind(
+            abstract: Contracts\UnlinkSocialAccountInterface::class,
+            concrete: Actions\UnlinkSocialAccount::class,
+        );
+
         $this->loadRoutesFrom($this->packagePath('routes/api.php'));
 
         $this->publishProviderCredentials();
