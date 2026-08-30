@@ -42,6 +42,26 @@ return [
     |
     */
 
+    /*
+    |--------------------------------------------------------------------------
+    | Social sign-in over the API
+    |--------------------------------------------------------------------------
+    |
+    | Off by default: it widens the authentication surface, and an application that only serves a
+    | browser has no use for it. Turn it on for a SPA or native client.
+    |
+    | The flow is authorization-code, not token-exchange. The client asks for a URL, opens it, and
+    | posts back the code; this package performs the exchange with its own client secret. Accepting
+    | an access token the client already holds is deliberately not offered -- a provider's userinfo
+    | response carries no audience claim, so a token minted for another application cannot be told
+    | apart from one minted for this one.
+    |
+    */
+
+    'api' => [
+        'enabled' => (bool) env(key: 'AUTHKIT_SOCIAL_API_ENABLED', default: false),
+    ],
+
     'google' => [
         'client_id'     => env(key: 'AUTHKIT_GOOGLE_CLIENT_ID'),
         'client_secret' => env(key: 'AUTHKIT_GOOGLE_CLIENT_SECRET'),

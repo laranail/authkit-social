@@ -9,6 +9,22 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **Social sign-in for clients with no session** (`AUTHKIT_SOCIAL_API_ENABLED`, off by default).
+  `GET /api/auth/social/{provider}/redirect` hands the client a URL to open;
+  `POST /api/auth/social/{provider}/callback` takes the returned `code` and issues an API token.
+
+  It takes an authorization **code**, not an access token, and that is the whole design. Socialite's
+  `userFromToken()` calls the provider's userinfo endpoint, whose response carries no audience claim
+  — so a token minted for a *different* application by the same provider cannot be told apart from
+  one minted for this one, and anyone able to obtain one for their own app could present it and be
+  signed in as that provider's user. Apple's identity token is no better: the community provider
+  constrains issuer, signature and expiry and never adds `PermittedFor`. With the code flow this
+  package performs the exchange using its own client secret, and a code issued to another
+  application simply fails it.
+
+  Both endpoints run the same `ResolveSocialIdentity` as the browser flow, so the API cannot grant
+  what a browser could not, and a failure returns 422 with a deliberately unspecific message.
+
 - **A registered provider can carry its Socialite driver class.** Registering with the registry and
   binding the Socialite driver were separate steps, and nothing warned when the second was forgotten
   — the slug resolved and then Socialite threw at the callback. `IdentityProvider` now takes an

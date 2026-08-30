@@ -69,6 +69,13 @@ class SocialServiceProvider extends PackageServiceProvider
             return;
         }
 
+        $this->app->bind(
+            abstract: Contracts\StatelessSocialCallbackInterface::class,
+            concrete: Actions\StatelessSocialCallback::class,
+        );
+
+        $this->loadRoutesFrom($this->packagePath('routes/api.php'));
+
         $this->publishProviderCredentials();
         $this->registerPayPalProvider();
         $this->registerAppleProvider();

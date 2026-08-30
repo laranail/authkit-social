@@ -83,6 +83,44 @@ Register a redirect route and callback route whose `{provider}` value is restric
 
 Trust is declared per provider on the `SocialProvider` enum: `assertsEmailVerified()` says whether a provider asserts verification at all, and `hasVerifiedEmail()` reads that provider's own claim out of the raw payload. Both matches are exhaustive, so adding a case forces an explicit decision rather than inheriting one. This is what keeps a provider's email claim from becoming an account-takeover path.
 
+## Social sign-in without a session
+
+A SPA or native client has no cookie session, so the browser flow does not apply. Enable
+`AUTHKIT_SOCIAL_API_ENABLED=true` and two endpoints appear under the core's API prefix:
+
+| Method and path                             | Purpose                                             |
+|---------------------------------------------|-----------------------------------------------------|
+| `GET /api/auth/social/{provider}/redirect`  | Returns the URL the client should open               |
+| `POST /api/auth/social/{provider}/callback` | Takes the returned `code`, returns an API token      |
+
+The client opens the URL in a system browser or web view, the provider redirects back to the URI
+registered for the app — a custom URL scheme for native, a page in the SPA — and the client posts the
+`code` it received. The redirect URI must match this package's `redirect` config, because the
+provider checks it again during the exchange.
+
+### Why this takes a code, not an access token
+
+The obvious shape is "the app signs in with the provider's SDK and posts the access token". That is
+**deliberately not offered**, because it cannot be made safe with what the providers return:
+
+- Socialite's `userFromToken()` calls the provider's userinfo endpoint, whose response carries the
+  user's identity and **no audience claim**. There is nothing in it to compare against our client id.
+- A token is therefore accepted purely because the provider says it is valid — including one minted
+  for a **different application** by the same provider. Anyone who can obtain a token for their own
+  app can present it and be signed in as that provider's user.
+- Even Apple's identity token, a real JWT, is not audience-checked: the community provider constrains
+  issuer, signature and expiry and never adds `PermittedFor`.
+
+The authorization-code flow has no such hole. This package performs the exchange with its own client
+id and secret, and a code issued to another application fails it. `stateless()` only removes the
+session CSRF state check that a client without cookies cannot participate in; the exchange itself is
+unchanged.
+
+Both endpoints run the **same** `ResolveSocialIdentity` as the browser flow, so the verification and
+account-linking rules are decided in one place and the API can never grant what a browser could not.
+A failure returns 422 with a deliberately unspecific message: saying whether an address was
+unverified or already taken tells an unauthenticated caller which addresses have accounts.
+
 ## Adding a provider
 
 The accepted route values are the `SocialProvider` enum cases. Adding a provider requires a package change: add its enum case with an arm in both `assertsEmailVerified()` and `hasVerifiedEmail()`, add its credentials, redirect, and scopes under `laranail.authkit-social`, and ensure Socialite has a driver for that key. First-party Socialite drivers work through the normal `services.<provider>` configuration; a third-party driver must be registered with Socialite's extension mechanism, as PayPal is. Add callback tests for an existing identity, a verified email, an unverified or missing email, and authenticated linking before exposing the new provider.
