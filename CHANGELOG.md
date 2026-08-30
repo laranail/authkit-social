@@ -7,6 +7,17 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **A registered provider can carry its Socialite driver class.** Registering with the registry and
+  binding the Socialite driver were separate steps, and nothing warned when the second was forgotten
+  — the slug resolved and then Socialite threw at the callback. `IdentityProvider` now takes an
+  optional `driverClass` and this package binds it.
+
+  Note the timing: SocialiteProviders dispatches `SocialiteWasCalled` exactly once, from its own
+  `app->booted()` callback, so a provider must be registered during some package's `boot()`. That is
+  the constraint every SocialiteProviders package works under.
+
 ### Fixed
 
 - **X and LinkedIn could not authenticate at all.** Both shipped behind a green suite because every

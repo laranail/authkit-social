@@ -13,6 +13,7 @@ use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Apple\AppleExtendSocialite;
 use Simtabi\Laranail\Package\Tools\Providers\PackageServiceProvider;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
 
 /**
  * Social login for laranail/authkit.
@@ -71,6 +72,7 @@ class SocialServiceProvider extends PackageServiceProvider
         $this->publishProviderCredentials();
         $this->registerPayPalProvider();
         $this->registerAppleProvider();
+        $this->registerContributedProviders();
     }
 
     /**
@@ -106,6 +108,39 @@ class SocialServiceProvider extends PackageServiceProvider
                     providerName: 'paypal',
                     providerClass: Services\PayPalSocialProvider::class,
                 );
+            },
+        );
+    }
+
+    /**
+     * Bind the Socialite driver of every provider contributed through the registry.
+     *
+     * Registering a provider with the registry and binding its Socialite driver were separate
+     * steps, and nothing warned when the second was forgotten -- the slug resolved and then
+     * Socialite threw at the callback. A provider that supplies a driverClass now needs one
+     * registration.
+     *
+     * The listener reads the registry when the event fires rather than closing over it, so the
+     * order in which sub-packages boot does not matter.
+     *
+     * SocialiteProviders dispatches SocialiteWasCalled exactly once, from its own app->booted()
+     * callback -- not per driver resolution. A provider registered during any package's boot() is
+     * therefore seen, and one registered after the application has finished booting is not. That is
+     * the same constraint every SocialiteProviders package works under; register in boot().
+     */
+    private function registerContributedProviders(): void
+    {
+        Event::listen(
+            events: SocialiteWasCalled::class,
+            listener: function (SocialiteWasCalled $event): void {
+                foreach (app(abstract: IdentityProviderRegistryInterface::class)->all() as $provider) {
+                    if ($provider->driverClass !== null) {
+                        $event->extendSocialite(
+                            providerName: $provider->driver(),
+                            providerClass: $provider->driverClass,
+                        );
+                    }
+                }
             },
         );
     }
