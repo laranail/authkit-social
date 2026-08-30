@@ -26,7 +26,7 @@
         "docs": "https://opensource.simtabi.com/documentation/laranail/authkit-social/"
     },
     "require": {
-        "php": "^8.5",
+        "php": "^8.4.1 || ^8.5",
         "laranail/authkit": "^0.1",
         "laranail/enumerator": "^0.1",
         "laranail/package-tools": "^0.1",
