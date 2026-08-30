@@ -20,7 +20,7 @@ function redirectRequest(string $provider): Request
 }
 
 it(description: 'returns redirect url for google', closure: function (): void {
-    Socialite::fake(driver: SocialProvider::GOOGLE->value);
+    Socialite::fake(driver: SocialProvider::GOOGLE->driver());
 
     $action = app(abstract: SocialRedirectAction::class);
 
@@ -30,7 +30,7 @@ it(description: 'returns redirect url for google', closure: function (): void {
 });
 
 it(description: 'returns redirect url for apple', closure: function (): void {
-    Socialite::fake(driver: SocialProvider::APPLE->value);
+    Socialite::fake(driver: SocialProvider::APPLE->driver());
 
     $action = app(abstract: SocialRedirectAction::class);
 
@@ -39,18 +39,18 @@ it(description: 'returns redirect url for apple', closure: function (): void {
     expect(value: $result->url)->toBeString()->not->toBeEmpty();
 });
 
-it(description: 'returns redirect url for twitter', closure: function (): void {
-    Socialite::fake(driver: SocialProvider::TWITTER->value);
+it(description: 'returns redirect url for X', closure: function (): void {
+    Socialite::fake(driver: SocialProvider::X->driver());
 
     $action = app(abstract: SocialRedirectAction::class);
 
-    $result = $action->execute(request: redirectRequest('twitter'));
+    $result = $action->execute(request: redirectRequest('x'));
 
     expect(value: $result->url)->toBeString()->not->toBeEmpty();
 });
 
 it(description: 'returns redirect url for linkedin', closure: function (): void {
-    Socialite::fake(driver: SocialProvider::LINKEDIN->value);
+    Socialite::fake(driver: SocialProvider::LINKEDIN->driver());
 
     $action = app(abstract: SocialRedirectAction::class);
 
@@ -60,7 +60,7 @@ it(description: 'returns redirect url for linkedin', closure: function (): void 
 });
 
 it(description: 'returns redirect url for paypal', closure: function (): void {
-    Socialite::fake(driver: SocialProvider::PAYPAL->value);
+    Socialite::fake(driver: SocialProvider::PAYPAL->driver());
 
     $action = app(abstract: SocialRedirectAction::class);
 
@@ -73,14 +73,14 @@ it('exposes Enumerator labels and collection helpers without changing provider v
     expect(SocialProvider::values())->toBe([
         'google',
         'apple',
-        'twitter',
+        'x',
         'linkedin',
         'paypal',
     ])
         ->and(SocialProvider::labels())->toBe([
             'google'   => 'Google',
             'apple'   => 'Apple',
-            'twitter'  => 'X (Twitter)',
+            'x'        => 'X',
             'linkedin' => 'LinkedIn',
             'paypal'   => 'PayPal',
         ])

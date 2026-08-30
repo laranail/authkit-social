@@ -7,6 +7,45 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- **X and LinkedIn could not authenticate at all.** Both shipped behind a green suite because every
+  social test fakes the Socialite driver, and the fake honours whatever payload the test supplies —
+  so a test asserting "X links when `confirmed_email` is present" passed against a driver that never
+  sends one.
+
+  `twitter` resolved to Socialite's **OAuth 1.0a** provider, which builds a League `TwitterServer`
+  that wants `identifier`/`secret` and is handed `client_id`/`client_secret`: it threw before
+  redirecting, so every X sign-in was a 500 on the first click. `linkedin` resolved to the **legacy**
+  LinkedIn driver, whose projection is `id, firstName, lastName, profilePicture` with no
+  `email_verified` in it at all, so LinkedIn completed the round trip and then silently refused to
+  link or provision.
+
+  A `DriverContractTest` now asserts what Socialite actually resolves for every shipped provider. It
+  fails if either regression returns.
+
+- **Configured `scopes` were never applied.** Every provider block declared them and nothing read
+  them, so only the driver defaults were ever in effect. They are applied on redirect now, alongside
+  a new `with` option — which is what carries Google's `hd` Workspace restriction and
+  `prompt=select_account`, neither previously reachable.
+
+### Changed
+
+- **`SocialProvider::TWITTER` is now `SocialProvider::X`, value `twitter` → `x`.** Breaking for
+  anyone referencing the case, the route value, or the stored `socials.provider` value; the env
+  prefix moves from `AUTHKIT_TWITTER_` to `AUTHKIT_X_`. Applications with existing X links need
+  `UPDATE socials SET provider = 'x' WHERE provider = 'twitter'`.
+
+  The legacy `twitter` driver key is deliberately not used: it is the OAuth 1.0a fallback described
+  above. `x` resolves straight to Socialite's `XProvider`.
+
+- **A provider's Socialite driver key is now separate from its slug.** The slug is stored data — the
+  route value and what is written to `socials.provider` — while the driver key belongs to Socialite
+  and does change. `SocialProvider::LINKEDIN` keeps the slug `linkedin` and drives
+  `linkedin-openid`, and credentials publish under the driver key so the driver actually in use is
+  the one that receives them.
+
+
 ### Added
 
 - **Apple as a provider** (`SocialProvider::APPLE`), through `socialiteproviders/apple`. It asserts

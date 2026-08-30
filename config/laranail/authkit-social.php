@@ -47,6 +47,13 @@ return [
         'client_secret' => env(key: 'AUTHKIT_GOOGLE_CLIENT_SECRET'),
         'redirect'      => env(key: 'AUTHKIT_GOOGLE_REDIRECT'),
         'scopes'        => ['openid', 'profile', 'email'],
+
+        /*
+         * Optional parameters passed to the provider on the redirect. Google reads `hd` to restrict
+         * sign-in to one Workspace domain and `prompt` to force account selection. Do not pass
+         * reserved keys such as `state` or `response_type`.
+         */
+        'with' => [],
     ],
 
     /*
@@ -64,13 +71,29 @@ return [
         'scopes'        => ['name', 'email'],
     ],
 
-    'twitter' => [
-        'client_id'     => env(key: 'AUTHKIT_TWITTER_CLIENT_ID'),
-        'client_secret' => env(key: 'AUTHKIT_TWITTER_CLIENT_SECRET'),
-        'redirect'      => env(key: 'AUTHKIT_TWITTER_REDIRECT'),
+    /*
+     * The driver key is `x`, which resolves straight to Socialite's OAuth 2 XProvider.
+     *
+     * The legacy `twitter` key is deliberately not used: SocialiteManager::createTwitterDriver()
+     * falls back to an OAuth 1.0a provider unless the config carries `oauth => 2`, and that
+     * provider wants `identifier`/`secret` rather than `client_id`/`client_secret` -- it throws
+     * before it ever redirects, and never returns `confirmed_email`.
+     *
+     * `confirmed_email` only arrives when "Request email from users" is enabled on the app in X's
+     * developer dashboard. Without it the address is absent and no X login can link.
+     */
+    'x' => [
+        'client_id'     => env(key: 'AUTHKIT_X_CLIENT_ID'),
+        'client_secret' => env(key: 'AUTHKIT_X_CLIENT_SECRET'),
+        'redirect'      => env(key: 'AUTHKIT_X_REDIRECT'),
         'scopes'        => ['users.read', 'users.email', 'tweet.read'],
     ],
 
+    /*
+     * The slug stays `linkedin` because it is stored data, but SocialProvider::LINKEDIN->driver()
+     * resolves to `linkedin-openid` and this block is published under that key. Socialite's
+     * `linkedin` driver is the legacy API, whose projection carries no `email_verified` at all.
+     */
     'linkedin' => [
         'client_id'     => env(key: 'AUTHKIT_LINKEDIN_CLIENT_ID'),
         'client_secret' => env(key: 'AUTHKIT_LINKEDIN_CLIENT_SECRET'),

@@ -24,8 +24,25 @@ class SocialRedirectAction implements SocialRedirectActionInterface
     {
         $provider = $this->resolveProvider(request: $request);
 
+        $driver = $this->socialite->driver($provider->driver());
+
+        // Scopes and optional parameters were configurable and ignored: nothing read them, so the
+        // only scopes in effect were the driver's defaults. `with` is what carries Google's `hd`
+        // domain restriction and `prompt=select_account`, neither of which was reachable before.
+        $settings = config(key: "laranail.authkit-social.{$provider->slug()}", default: []);
+
+        if (is_array($settings)) {
+            if (! empty($settings['scopes']) && is_array($settings['scopes']) && method_exists($driver, 'scopes')) {
+                $driver->scopes($settings['scopes']);
+            }
+
+            if (! empty($settings['with']) && is_array($settings['with']) && method_exists($driver, 'with')) {
+                $driver->with($settings['with']);
+            }
+        }
+
         return new SocialRedirectResult(
-            url: $this->socialite->driver($provider->slug())->redirect()->getTargetUrl(),
+            url: $driver->redirect()->getTargetUrl(),
         );
     }
 }

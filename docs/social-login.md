@@ -8,7 +8,7 @@ Auth Kit integrates Laravel Socialite but does not register routes or render but
 |----------|-------------|------------------------------------------------------|-----------------------------|--------------------|
 | Google   | `google`    | `https://your-app.test/auth/social/google/callback`  | `AUTHKIT_GOOGLE_`          | `email_verified`   |
 | Apple    | `apple`     | `https://your-app.test/auth/social/apple/callback`   | `AUTHKIT_APPLE_`           | `email_verified`   |
-| X        | `twitter`   | `https://your-app.test/auth/social/twitter/callback` | `AUTHKIT_TWITTER_`         | `confirmed_email`  |
+| X        | `x`         | `https://your-app.test/auth/social/x/callback`       | `AUTHKIT_X_`               | `confirmed_email`  |
 | LinkedIn | `linkedin`  | `https://your-app.test/auth/social/linkedin/callback`| `AUTHKIT_LINKEDIN_`        | `email_verified`   |
 | PayPal   | `paypal`    | `https://your-app.test/auth/social/paypal/callback`  | `AUTHKIT_PAYPAL_`          | `email_verified`   |
 
@@ -36,7 +36,7 @@ already registers it that way; a hand-rolled route must do the same or Apple sig
 
 Apple sends the user's name only on the **first** authorization and never again, and may return a
 per-app relay address on `@privaterelay.appleid.com`. Apple verifies relay addresses, so they are
-trusted; they simply will not match a local account, so in practice they provision rather than link. X requests `users.read`, `users.email`, and `tweet.read`, and returns `confirmed_email` only when "Request email from users" is enabled on the app in X's developer dashboard — without it the address is absent and no X login can link. Provider approval, app mode, and email-access requirements remain provider-specific.
+trusted; they simply will not match a local account, so in practice they provision rather than link. X requests `users.read`, `users.email`, and `tweet.read`, and returns `confirmed_email` only when "Request email from users" is enabled on the app in X's developer dashboard — without it the address is absent and no X login can link. LinkedIn authenticates through Socialite's `linkedin-openid` driver, not the legacy `linkedin` one, which returns no verification claim at all; the route value stays `linkedin` because it is stored data. Provider approval, app mode, and email-access requirements remain provider-specific.
 
 ```env
 AUTHKIT_GOOGLE_CLIENT_ID=
@@ -44,7 +44,7 @@ AUTHKIT_GOOGLE_CLIENT_SECRET=
 AUTHKIT_GOOGLE_REDIRECT="${APP_URL}/auth/social/google/callback"
 ```
 
-Replace `GOOGLE` with `APPLE`, `TWITTER`, `LINKEDIN`, or `PAYPAL` for the other providers. PayPal is sandboxed by default; set `AUTHKIT_PAYPAL_SANDBOX_MODE=false` only when both the callback and credentials are production values. Clear Laravel's configuration cache after changing environment values.
+Replace `GOOGLE` with `APPLE`, `X`, `LINKEDIN`, or `PAYPAL` for the other providers. PayPal is sandboxed by default; set `AUTHKIT_PAYPAL_SANDBOX_MODE=false` only when both the callback and credentials are production values. Clear Laravel's configuration cache after changing environment values.
 
 ## Routes, controllers, and persistence
 

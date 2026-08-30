@@ -12,6 +12,7 @@ use Simtabi\Laranail\AuthKit\Social\Contracts;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 use SocialiteProviders\Apple\AppleExtendSocialite;
 use Simtabi\Laranail\Package\Tools\Providers\PackageServiceProvider;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 
 /**
  * Social login for laranail/authkit.
@@ -81,10 +82,18 @@ class SocialServiceProvider extends PackageServiceProvider
      */
     private function publishProviderCredentials(): void
     {
-        foreach (config(key: 'laranail.authkit-social', default: []) as $provider => $providerConfig) {
-            if ($provider !== 'enabled' && is_array(value: $providerConfig)) {
-                config()->set(key: "services.{$provider}", value: $providerConfig);
+        foreach (config(key: 'laranail.authkit-social', default: []) as $slug => $providerConfig) {
+            if ($slug === 'enabled' || ! is_array(value: $providerConfig)) {
+                continue;
             }
+
+            // Published under the *driver* key, which is not always the slug. Socialite reads
+            // services.linkedin-openid for the OpenID LinkedIn driver, so publishing our
+            // `linkedin` block to services.linkedin would leave the driver we actually use with
+            // no credentials at all.
+            $driver = SocialProvider::tryFrom($slug)?->driver() ?? $slug;
+
+            config()->set(key: "services.{$driver}", value: $providerConfig);
         }
     }
 

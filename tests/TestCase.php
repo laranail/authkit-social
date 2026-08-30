@@ -15,6 +15,10 @@ abstract class TestCase extends BaseTestCase
         return [
             // Socialite is this package's dependency now, not the core's.
             \Laravel\Socialite\SocialiteServiceProvider::class,
+            // Apple and PayPal are contributed through SocialiteWasCalled, which only fires when
+            // this manager is in place. Without it they resolve as "Driver not supported" in tests
+            // while working perfectly in a real application -- a gap that hides driver bugs.
+            \SocialiteProviders\Manager\ServiceProvider::class,
             \Laravel\Fortify\FortifyServiceProvider::class,
             \Laravel\Sanctum\SanctumServiceProvider::class,
             AuthKitServiceProvider::class,

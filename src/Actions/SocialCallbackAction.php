@@ -26,7 +26,7 @@ class SocialCallbackAction implements SocialCallbackActionInterface
     public function execute(Request $request, string $guard): AuthResult
     {
         $provider = $this->resolveProvider(request: $request);
-        $socialiteUser = $this->socialite->driver($provider->slug())->user();
+        $socialiteUser = $this->socialite->driver($provider->driver())->user();
 
         $user = $this->resolver->execute(
             provider: $provider,

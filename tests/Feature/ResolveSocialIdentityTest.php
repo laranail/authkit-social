@@ -218,7 +218,7 @@ it('links social account to authenticated user', function (): void {
 
 it('accepts the confirmed address X returns as its verification claim', function (): void {
     $user = app(ResolveSocialIdentity::class)->execute(
-        provider: SocialProvider::TWITTER,
+        provider: SocialProvider::X,
         socialUser: socialiteUser(['confirmed_email' => 'john@example.com']),
         guard: 'web',
     );
@@ -234,7 +234,7 @@ it('reads each provider’s own claim, so X is unverified without confirmed_emai
     // omits confirmed_email altogether when the address is unconfirmed -- so trusting
     // the wrong key here would hand an account over on a claim X never made.
     $user = app(ResolveSocialIdentity::class)->execute(
-        provider: SocialProvider::TWITTER,
+        provider: SocialProvider::X,
         socialUser: socialiteUser(),
         guard: 'web',
     );

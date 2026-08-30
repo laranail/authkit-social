@@ -19,8 +19,8 @@ enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterfa
     #[Label('Apple')]
     case APPLE = 'apple';
 
-    #[Label('X (Twitter)')]
-    case TWITTER = 'twitter';
+    #[Label('X')]
+    case X = 'x';
 
     #[Label('LinkedIn')]
     case LINKEDIN = 'linkedin';
@@ -43,7 +43,7 @@ enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterfa
     public function assertsEmailVerified(): bool
     {
         return match ($this) {
-            self::GOOGLE, self::APPLE, self::LINKEDIN, self::PAYPAL, self::TWITTER => true,
+            self::GOOGLE, self::APPLE, self::LINKEDIN, self::PAYPAL, self::X => true,
         };
     }
 
@@ -73,7 +73,7 @@ enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterfa
                 $rawUser['email_verified'] ?? false,
                 FILTER_VALIDATE_BOOLEAN,
             ),
-            self::TWITTER => is_string($rawUser['confirmed_email'] ?? null)
+            self::X => is_string($rawUser['confirmed_email'] ?? null)
                 && filter_var($rawUser['confirmed_email'], FILTER_VALIDATE_EMAIL) !== false,
         };
     }
@@ -87,6 +87,25 @@ enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterfa
     public function slug(): string
     {
         return $this->value;
+    }
+
+    /**
+     * The Socialite driver key, which is not always the slug.
+     *
+     * LinkedIn is the case that matters: the `linkedin` key resolves to Socialite's legacy provider,
+     * whose projection is `id, firstName, lastName, profilePicture` with no `email_verified` in it at
+     * all. Reading a claim that is never sent means the provider completes the OAuth round trip and
+     * then silently refuses to link or provision. `linkedin-openid` projects
+     * `sub,email,email_verified,...` and is the one to use.
+     *
+     * The match is exhaustive for the same reason as the others: a new case has to answer.
+     */
+    public function driver(): string
+    {
+        return match ($this) {
+            self::GOOGLE, self::APPLE, self::X, self::PAYPAL => $this->value,
+            self::LINKEDIN => 'linkedin-openid',
+        };
     }
 
     // label() is not declared here: HasEnumerator already provides it from the #[Label]
