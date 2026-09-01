@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Enums;
 
-use Simtabi\Laranail\Enumerator\Attributes\Label;
-use Simtabi\Laranail\Enumerator\Contracts\Enumerator;
 use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
+use Simtabi\Laranail\Enumerator\Attributes\Label;
 use Simtabi\Laranail\Enumerator\Concerns\HasEnumerator;
+use Simtabi\Laranail\Enumerator\Contracts\Enumerator;
 
 enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterface
 {

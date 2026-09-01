@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-use Illuminate\Support\Str;
-use Workbench\App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Simtabi\Laranail\AuthKit\Social\Models\Social;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
-use Simtabi\Laranail\AuthKit\Social\Services\SocialAccountService;
+use Illuminate\Support\Str;
 use Simtabi\Laranail\AuthKit\Social\Contracts\UnlinkSocialAccountInterface;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\AuthKit\Social\Models\Social;
+use Simtabi\Laranail\AuthKit\Social\Services\SocialAccountService;
+use Workbench\App\Models\User;
 
 function linkProvider(User $user, string $provider, string $id = 'pid'): Social
 {
     return Social::query()->create([
         'socialable_type' => $user::class,
-        'socialable_id'   => $user->getKey(),
-        'provider'        => $provider,
-        'provider_id'     => $id,
-        'email'           => $user->email,
+        'socialable_id' => $user->getKey(),
+        'provider' => $provider,
+        'provider_id' => $id,
+        'email' => $user->email,
     ]);
 }
 

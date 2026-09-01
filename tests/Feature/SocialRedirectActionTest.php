@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Validator;
-use Simtabi\Laranail\Enumerator\Rules\EnumValue;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Laravel\Socialite\Facades\Socialite;
+use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
 use Simtabi\Laranail\AuthKit\Social\Actions\SocialRedirectAction;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
+use Simtabi\Laranail\AuthKit\Support\IdentityProvider;
+use Simtabi\Laranail\Enumerator\Rules\EnumValue;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 function redirectRequest(string $provider): Request
 {
@@ -78,11 +82,11 @@ it('exposes Enumerator labels and collection helpers without changing provider v
         'paypal',
     ])
         ->and(SocialProvider::labels())->toBe([
-            'google'   => 'Google',
-            'apple'   => 'Apple',
-            'x'        => 'X',
+            'google' => 'Google',
+            'apple' => 'Apple',
+            'x' => 'X',
             'linkedin' => 'LinkedIn',
-            'paypal'   => 'PayPal',
+            'paypal' => 'PayPal',
         ])
         ->and(SocialProvider::collect()->flatValues())->toBe(SocialProvider::values())
         ->and(SocialProvider::GOOGLE->label())->toBe('Google');
@@ -103,12 +107,12 @@ it(description: 'raises a 404 rather than a 500 for an unknown provider slug', c
     $action = app(abstract: SocialRedirectAction::class);
 
     expect(value: fn () => $action->execute(request: redirectRequest('myspace')))
-        ->toThrow(exception: Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        ->toThrow(exception: NotFoundHttpException::class);
 });
 
 it(description: 'redirects for a provider a sub-package registered, without editing this package', closure: function (): void {
-    app(abstract: Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface::class)->register(
-        new Simtabi\Laranail\AuthKit\Support\IdentityProvider(
+    app(abstract: IdentityProviderRegistryInterface::class)->register(
+        new IdentityProvider(
             slug: 'okta',
             label: 'Okta',
             assertsEmailVerified: true,
@@ -125,8 +129,8 @@ it(description: 'does not let a registration shadow a built-in provider', closur
     // A package registering 'google' must not take over Google sign-in: the enum's verification
     // rules would stop applying to it, and an IdentityProvider can declare itself verified with
     // no exhaustive match to answer to.
-    app(abstract: Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface::class)->register(
-        new Simtabi\Laranail\AuthKit\Support\IdentityProvider(
+    app(abstract: IdentityProviderRegistryInterface::class)->register(
+        new IdentityProvider(
             slug: 'google',
             label: 'Not Google',
             assertsEmailVerified: true,
@@ -134,9 +138,14 @@ it(description: 'does not let a registration shadow a built-in provider', closur
     );
 
     $request = redirectRequest('google');
-    $resolved = (new class {
-        use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
-        public function resolve($r) { return $this->resolveProvider($r); }
+    $resolved = (new class
+    {
+        use ResolvesIdentityProvider;
+
+        public function resolve($r)
+        {
+            return $this->resolveProvider($r);
+        }
     })->resolve($request);
 
     expect(value: $resolved)->toBe(SocialProvider::GOOGLE);

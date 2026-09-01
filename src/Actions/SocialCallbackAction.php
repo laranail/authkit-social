@@ -4,15 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Actions;
 
-use Illuminate\Http\Request;
 use Illuminate\Contracts\Auth\Authenticatable;
-use Simtabi\Laranail\AuthKit\Support\AuthResult;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Illuminate\Http\Request;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
-use Simtabi\Laranail\AuthKit\Social\Contracts\SocialCallbackActionInterface;
 use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Simtabi\Laranail\AuthKit\Social\Contracts\SocialCallbackActionInterface;
 use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
+use Simtabi\Laranail\AuthKit\Support\AuthResult;
 
 class SocialCallbackAction implements SocialCallbackActionInterface
 {

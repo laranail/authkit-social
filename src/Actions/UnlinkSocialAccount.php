@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\AuthKit\Social\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
-use Simtabi\Laranail\AuthKit\Social\Services\SocialAccountService;
 use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 use Simtabi\Laranail\AuthKit\Social\Contracts\UnlinkSocialAccountInterface;
+use Simtabi\Laranail\AuthKit\Social\Services\SocialAccountService;
 
 class UnlinkSocialAccount implements UnlinkSocialAccountInterface
 {

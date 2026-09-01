@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Illuminate\Support\ServiceProvider;
+use Simtabi\Laranail\AuthKit\Providers\AuthKitServiceProvider;
+use Simtabi\Laranail\AuthKit\Social\Providers\SocialServiceProvider;
 
 /*
  * Every public name a package registers lands in a flat, global registry. A second package claiming
@@ -51,17 +53,17 @@ it('can still be switched off deliberately', function (): void {
  */
 it('publishes the social migrations under this package', function (): void {
     $paths = ServiceProvider::pathsToPublish(
-        provider: Simtabi\Laranail\AuthKit\Social\Providers\SocialServiceProvider::class,
+        provider: SocialServiceProvider::class,
         group: 'laranail::authkit-social-migrations',
     );
 
     expect(array_map('realpath', array_keys($paths)))
-        ->toContain(realpath(dirname(__DIR__, 2) . '/database/migrations/social'));
+        ->toContain(realpath(dirname(__DIR__, 2).'/database/migrations/social'));
 });
 
 it('is the only package publishing that tag', function (): void {
     $fromCore = ServiceProvider::pathsToPublish(
-        provider: Simtabi\Laranail\AuthKit\Providers\AuthKitServiceProvider::class,
+        provider: AuthKitServiceProvider::class,
         group: 'laranail::authkit-social-migrations',
     );
 

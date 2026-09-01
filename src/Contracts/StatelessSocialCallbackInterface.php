@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Contracts;
 
-use Simtabi\Laranail\AuthKit\Support\TokenResult;
 use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
+use Simtabi\Laranail\AuthKit\Support\TokenResult;
 
 interface StatelessSocialCallbackInterface
 {

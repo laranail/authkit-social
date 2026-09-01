@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
-use Simtabi\Laranail\AuthKit\Social\Database\Factories\SocialFactory;
 use Simtabi\Laranail\AuthKit\Social\Casts\IdentityProviderCast;
+use Simtabi\Laranail\AuthKit\Social\Database\Factories\SocialFactory;
 
 class Social extends Model
 {
@@ -44,10 +43,10 @@ class Social extends Model
     protected function casts(): array
     {
         return [
-            'provider'      => IdentityProviderCast::class,
-            'token'         => 'encrypted',
+            'provider' => IdentityProviderCast::class,
+            'token' => 'encrypted',
             'refresh_token' => 'encrypted',
-            'expires_at'    => 'immutable_datetime',
+            'expires_at' => 'immutable_datetime',
         ];
     }
 }

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\AuthKit\Social\Support;
 
 use Illuminate\Http\Request;
+use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
+use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
-use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
 
 /**
  * Turns the `{provider}` route parameter into a provider, whoever supplied it.

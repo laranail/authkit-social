@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
-use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
 use Simtabi\Laranail\AuthKit\Social\Contracts\StatelessSocialCallbackInterface;
+use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
 
 /**
  * Social sign-in for clients with no browser session.
@@ -36,7 +36,7 @@ abstract class AbstractApiSocialController
 
         return new JsonResponse(data: [
             'status' => 'ok',
-            'data'   => ['url' => $driver->redirect()->getTargetUrl()],
+            'data' => ['url' => $driver->redirect()->getTargetUrl()],
         ]);
     }
 
@@ -55,14 +55,14 @@ abstract class AbstractApiSocialController
             // "this address belongs to someone else" tells an unauthenticated caller which
             // addresses have accounts.
             return new JsonResponse(data: [
-                'status'  => 'error',
+                'status' => 'error',
                 'message' => 'That social account could not be used to sign in.',
             ], status: 422);
         }
 
         return new JsonResponse(data: [
             'status' => 'ok',
-            'data'   => ['token' => $result->token],
+            'data' => ['token' => $result->token],
         ]);
     }
 }

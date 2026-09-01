@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Services;
 
-use RuntimeException;
 use GuzzleHttp\RequestOptions;
-use SocialiteProviders\Manager\OAuth2\User;
+use RuntimeException;
 use SocialiteProviders\Manager\OAuth2\AbstractProvider;
+use SocialiteProviders\Manager\OAuth2\User;
 
 class PayPalSocialProvider extends AbstractProvider
 {
@@ -23,8 +23,8 @@ class PayPalSocialProvider extends AbstractProvider
             uri: $this->getTokenUrl(),
             options: [
                 RequestOptions::HEADERS => [
-                    'Accept'        => 'application/json',
-                    'Authorization' => 'Basic ' . base64_encode(string: "{$this->clientId}:{$this->clientSecret}"),
+                    'Accept' => 'application/json',
+                    'Authorization' => 'Basic '.base64_encode(string: "{$this->clientId}:{$this->clientSecret}"),
                 ],
                 RequestOptions::FORM_PARAMS => $this->getTokenFields(code: $code),
             ],
@@ -61,25 +61,25 @@ class PayPalSocialProvider extends AbstractProvider
     protected function getAuthUrl($state): string
     {
         return $this->buildAuthUrlFromBase(
-            url: $this->getWebBaseUrl() . '/signin/authorize',
+            url: $this->getWebBaseUrl().'/signin/authorize',
             state: $state,
         );
     }
 
     protected function getTokenUrl(): string
     {
-        return $this->getApiBaseUrl() . '/v1/oauth2/token';
+        return $this->getApiBaseUrl().'/v1/oauth2/token';
     }
 
     /** @return array<string, mixed> */
     protected function getUserByToken($token): array
     {
         $response = $this->getHttpClient()->get(
-            uri: $this->getApiBaseUrl() . '/v1/identity/openidconnect/userinfo',
+            uri: $this->getApiBaseUrl().'/v1/identity/openidconnect/userinfo',
             options: [
                 RequestOptions::HEADERS => [
-                    'Authorization' => 'Bearer ' . $token,
-                    'Content-Type'  => 'application/x-www-form-urlencoded',
+                    'Authorization' => 'Bearer '.$token,
+                    'Content-Type' => 'application/x-www-form-urlencoded',
                 ],
                 RequestOptions::QUERY => [
                     'schema' => 'openid',
@@ -101,15 +101,15 @@ class PayPalSocialProvider extends AbstractProvider
         return (new User)
             ->setRaw(user: $user)
             ->map(attributes: [
-                'id'         => basename(path: $user['user_id']),
-                'nickname'   => null,
-                'name'       => $user['name'] ?? null,
-                'email'      => $user['email'] ?? null,
-                'avatar'     => null,
+                'id' => basename(path: $user['user_id']),
+                'nickname' => null,
+                'name' => $user['name'] ?? null,
+                'email' => $user['email'] ?? null,
+                'avatar' => null,
                 'attributes' => [
-                    'email_verified'   => $user['email_verified'] ?? null,
-                    'verified'         => $user['verified'] ?? null,
-                    'payer_id'         => $user['payer_id'] ?? null,
+                    'email_verified' => $user['email_verified'] ?? null,
+                    'verified' => $user['verified'] ?? null,
+                    'payer_id' => $user['payer_id'] ?? null,
                     'verified_account' => $user['verified_account'] ?? null,
                 ],
             ]);

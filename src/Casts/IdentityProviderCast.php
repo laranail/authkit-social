@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Casts;
 
-use Illuminate\Database\Eloquent\Model;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
-use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
+use Illuminate\Database\Eloquent\Model;
 use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
+use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 
 /**
  * Reads a stored provider slug back as whatever kind of provider it is.

@@ -86,10 +86,10 @@ return [
     ],
 
     'google' => [
-        'client_id'     => env(key: 'AUTHKIT_GOOGLE_CLIENT_ID'),
+        'client_id' => env(key: 'AUTHKIT_GOOGLE_CLIENT_ID'),
         'client_secret' => env(key: 'AUTHKIT_GOOGLE_CLIENT_SECRET'),
-        'redirect'      => env(key: 'AUTHKIT_GOOGLE_REDIRECT'),
-        'scopes'        => ['openid', 'profile', 'email'],
+        'redirect' => env(key: 'AUTHKIT_GOOGLE_REDIRECT'),
+        'scopes' => ['openid', 'profile', 'email'],
 
         /*
          * Optional parameters passed to the provider on the redirect. Google reads `hd` to restrict
@@ -108,10 +108,10 @@ return [
      * The client_id is the Services ID, not the App ID.
      */
     'apple' => [
-        'client_id'     => env(key: 'AUTHKIT_APPLE_CLIENT_ID'),
+        'client_id' => env(key: 'AUTHKIT_APPLE_CLIENT_ID'),
         'client_secret' => env(key: 'AUTHKIT_APPLE_CLIENT_SECRET'),
-        'redirect'      => env(key: 'AUTHKIT_APPLE_REDIRECT'),
-        'scopes'        => ['name', 'email'],
+        'redirect' => env(key: 'AUTHKIT_APPLE_REDIRECT'),
+        'scopes' => ['name', 'email'],
     ],
 
     /*
@@ -126,10 +126,10 @@ return [
      * developer dashboard. Without it the address is absent and no X login can link.
      */
     'x' => [
-        'client_id'     => env(key: 'AUTHKIT_X_CLIENT_ID'),
+        'client_id' => env(key: 'AUTHKIT_X_CLIENT_ID'),
         'client_secret' => env(key: 'AUTHKIT_X_CLIENT_SECRET'),
-        'redirect'      => env(key: 'AUTHKIT_X_REDIRECT'),
-        'scopes'        => ['users.read', 'users.email', 'tweet.read'],
+        'redirect' => env(key: 'AUTHKIT_X_REDIRECT'),
+        'scopes' => ['users.read', 'users.email', 'tweet.read'],
     ],
 
     /*
@@ -138,18 +138,18 @@ return [
      * `linkedin` driver is the legacy API, whose projection carries no `email_verified` at all.
      */
     'linkedin' => [
-        'client_id'     => env(key: 'AUTHKIT_LINKEDIN_CLIENT_ID'),
+        'client_id' => env(key: 'AUTHKIT_LINKEDIN_CLIENT_ID'),
         'client_secret' => env(key: 'AUTHKIT_LINKEDIN_CLIENT_SECRET'),
-        'redirect'      => env(key: 'AUTHKIT_LINKEDIN_REDIRECT'),
-        'scopes'        => ['openid', 'profile', 'email'],
+        'redirect' => env(key: 'AUTHKIT_LINKEDIN_REDIRECT'),
+        'scopes' => ['openid', 'profile', 'email'],
     ],
 
     'paypal' => [
-        'client_id'     => env(key: 'AUTHKIT_PAYPAL_CLIENT_ID'),
+        'client_id' => env(key: 'AUTHKIT_PAYPAL_CLIENT_ID'),
         'client_secret' => env(key: 'AUTHKIT_PAYPAL_CLIENT_SECRET'),
-        'redirect'      => env(key: 'AUTHKIT_PAYPAL_REDIRECT'),
-        'sandbox_mode'  => (bool) env(key: 'AUTHKIT_PAYPAL_SANDBOX_MODE', default: true),
-        'scopes'        => ['openid', 'profile', 'email'],
+        'redirect' => env(key: 'AUTHKIT_PAYPAL_REDIRECT'),
+        'sandbox_mode' => (bool) env(key: 'AUTHKIT_PAYPAL_SANDBOX_MODE', default: true),
+        'scopes' => ['openid', 'profile', 'email'],
     ],
 
 ];

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Workbench\App\Models\User;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
-use Simtabi\Laranail\AuthKit\Social\Models\Social;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Actions\SocialCallbackAction;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\AuthKit\Social\Models\Social;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Workbench\App\Models\User;
 
 function callbackRequest(string $provider): Request
 {
@@ -22,11 +23,11 @@ function callbackRequest(string $provider): Request
 
 beforeEach(function (): void {
     $rawUser = [
-        'id'             => '123456789',
-        'name'           => 'John Doe',
-        'nickname'       => 'johndoe',
-        'email'          => 'john@example.com',
-        'avatar'         => 'https://example.com/avatar.jpg',
+        'id' => '123456789',
+        'name' => 'John Doe',
+        'nickname' => 'johndoe',
+        'email' => 'john@example.com',
+        'avatar' => 'https://example.com/avatar.jpg',
         'email_verified' => true,
     ];
 
@@ -57,13 +58,13 @@ it('returns existing user when social account already exists', function (): void
     $existingUser = User::factory()->create(['email' => 'john@example.com']);
     Social::query()->create([
         'socialable_type' => get_class($existingUser),
-        'socialable_id'   => $existingUser->getAuthIdentifier(),
-        'provider'        => 'google',
-        'provider_id'     => '123456789',
-        'name'            => 'John Doe',
-        'email'           => 'john@example.com',
-        'token'           => 'old-token',
-        'refresh_token'   => 'old-refresh',
+        'socialable_id' => $existingUser->getAuthIdentifier(),
+        'provider' => 'google',
+        'provider_id' => '123456789',
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'token' => 'old-token',
+        'refresh_token' => 'old-refresh',
     ]);
 
     $result = app(SocialCallbackAction::class)->execute(
@@ -78,8 +79,8 @@ it('returns existing user when social account already exists', function (): void
 it('returns failed when socialite user has no email', function (): void {
     $noEmailUser = new SocialiteUser;
     $noEmailUser->map([
-        'id'       => '123456789',
-        'name'     => 'No Email',
+        'id' => '123456789',
+        'name' => 'No Email',
         'nickname' => 'noemail',
     ]);
     $noEmailUser->token = 'mock-token';
@@ -99,5 +100,5 @@ it(description: 'raises a 404 rather than a 500 for an unknown provider slug', c
     $action = app(abstract: SocialCallbackAction::class);
 
     expect(value: fn () => $action->execute(request: callbackRequest('myspace'), guard: 'web'))
-        ->toThrow(exception: Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        ->toThrow(exception: NotFoundHttpException::class);
 });

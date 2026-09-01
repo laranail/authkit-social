@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Workbench\App\Models\User;
+use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Simtabi\Laranail\AuthKit\Support\IdentityProvider;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
-use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
+use Workbench\App\Models\User;
 
 function storeLink(string $provider): Social
 {
@@ -14,10 +14,10 @@ function storeLink(string $provider): Social
 
     return Social::query()->create([
         'socialable_type' => $user::class,
-        'socialable_id'   => $user->getKey(),
-        'provider'        => $provider,
-        'provider_id'     => 'pid-' . $provider,
-        'email'           => $user->email,
+        'socialable_id' => $user->getKey(),
+        'provider' => $provider,
+        'provider_id' => 'pid-'.$provider,
+        'email' => $user->email,
     ]);
 }
 
@@ -52,10 +52,10 @@ it('stores a provider object as its slug', function (): void {
     $user = User::factory()->create();
     Social::query()->create([
         'socialable_type' => $user::class,
-        'socialable_id'   => $user->getKey(),
-        'provider'        => SocialProvider::GOOGLE,
-        'provider_id'     => 'obj-1',
-        'email'           => $user->email,
+        'socialable_id' => $user->getKey(),
+        'provider' => SocialProvider::GOOGLE,
+        'provider_id' => 'obj-1',
+        'email' => $user->email,
     ]);
 
     expect(Social::query()->where('provider', 'google')->count())->toBe(1);
