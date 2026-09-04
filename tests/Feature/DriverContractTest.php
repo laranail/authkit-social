@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use Laravel\Socialite\Two\XProvider;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\AbstractProvider;
 use Laravel\Socialite\Two\LinkedInOpenIdProvider;
-use Laravel\Socialite\Two\XProvider;
 use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 
 /**
@@ -22,9 +22,9 @@ use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
 beforeEach(function (): void {
     foreach (SocialProvider::cases() as $provider) {
         config()->set("services.{$provider->driver()}", [
-            'client_id' => 'test-id',
+            'client_id'     => 'test-id',
             'client_secret' => 'test-secret',
-            'redirect' => 'https://example.test/callback',
+            'redirect'      => 'https://example.test/callback',
         ]);
     }
 });

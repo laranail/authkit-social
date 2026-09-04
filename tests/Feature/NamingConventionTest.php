@@ -58,7 +58,7 @@ it('publishes the social migrations under this package', function (): void {
     );
 
     expect(array_map('realpath', array_keys($paths)))
-        ->toContain(realpath(dirname(__DIR__, 2).'/database/migrations/social'));
+        ->toContain(realpath(dirname(__DIR__, 2) . '/database/migrations/social'));
 });
 
 it('is the only package publishing that tag', function (): void {

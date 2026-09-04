@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Enums;
 
-use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 use Simtabi\Laranail\Enumerator\Attributes\Label;
-use Simtabi\Laranail\Enumerator\Concerns\HasEnumerator;
 use Simtabi\Laranail\Enumerator\Contracts\Enumerator;
+use Simtabi\Laranail\Enumerator\Concerns\HasEnumerator;
+use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 
 enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterface
 {
@@ -64,7 +64,7 @@ enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterfa
      * The match is deliberately exhaustive: a new case on this enum fails loudly
      * here rather than defaulting to either answer.
      *
-     * @param  array<string, mixed>  $rawUser
+     * @param array<string, mixed> $rawUser
      */
     public function hasVerifiedEmail(array $rawUser): bool
     {
@@ -104,7 +104,7 @@ enum SocialProvider: string implements Enumerator, SocialIdentityProviderInterfa
     {
         return match ($this) {
             self::GOOGLE, self::APPLE, self::X, self::PAYPAL => $this->value,
-            self::LINKEDIN => 'linkedin-openid',
+            self::LINKEDIN                                   => 'linkedin-openid',
         };
     }
 

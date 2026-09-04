@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-use Laravel\Socialite\Two\User as SocialiteUser;
-use Simtabi\Laranail\AuthKit\Social\Actions\ResolveSocialIdentity;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
-use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Workbench\App\Models\User;
+use Laravel\Socialite\Two\User as SocialiteUser;
+use Simtabi\Laranail\AuthKit\Social\Models\Social;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\AuthKit\Social\Actions\ResolveSocialIdentity;
 
 function socialiteUser(array $overrides = []): SocialiteUser
 {
     $raw = array_merge([
-        'id' => '123456789',
-        'name' => 'John Doe',
-        'nickname' => 'johndoe',
-        'email' => 'john@example.com',
-        'avatar' => 'https://example.com/avatar.jpg',
+        'id'             => '123456789',
+        'name'           => 'John Doe',
+        'nickname'       => 'johndoe',
+        'email'          => 'john@example.com',
+        'avatar'         => 'https://example.com/avatar.jpg',
         'email_verified' => true,
     ], $overrides);
 
@@ -32,11 +32,11 @@ function socialiteUser(array $overrides = []): SocialiteUser
 function socialiteUserWithoutVerification(): SocialiteUser
 {
     $raw = [
-        'id' => '123456789',
-        'name' => 'John Doe',
+        'id'       => '123456789',
+        'name'     => 'John Doe',
         'nickname' => 'johndoe',
-        'email' => 'john@example.com',
-        'avatar' => 'https://example.com/avatar.jpg',
+        'email'    => 'john@example.com',
+        'avatar'   => 'https://example.com/avatar.jpg',
     ];
 
     $user = new SocialiteUser;
@@ -53,13 +53,13 @@ it('returns existing socialable when social record matches', function (): void {
     $existingUser = User::factory()->create(['email' => 'john@example.com']);
     Social::query()->create([
         'socialable_type' => get_class($existingUser),
-        'socialable_id' => $existingUser->getAuthIdentifier(),
-        'provider' => 'google',
-        'provider_id' => '123456789',
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
-        'token' => 'old-token',
-        'refresh_token' => 'old-refresh',
+        'socialable_id'   => $existingUser->getAuthIdentifier(),
+        'provider'        => 'google',
+        'provider_id'     => '123456789',
+        'name'            => 'John Doe',
+        'email'           => 'john@example.com',
+        'token'           => 'old-token',
+        'refresh_token'   => 'old-refresh',
     ]);
 
     $user = app(ResolveSocialIdentity::class)->execute(
@@ -75,13 +75,13 @@ it('updates tokens on existing social record', function (): void {
     $existingUser = User::factory()->create(['email' => 'john@example.com']);
     Social::query()->create([
         'socialable_type' => get_class($existingUser),
-        'socialable_id' => $existingUser->getAuthIdentifier(),
-        'provider' => 'google',
-        'provider_id' => '123456789',
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
-        'token' => 'old-token',
-        'refresh_token' => 'old-refresh',
+        'socialable_id'   => $existingUser->getAuthIdentifier(),
+        'provider'        => 'google',
+        'provider_id'     => '123456789',
+        'name'            => 'John Doe',
+        'email'           => 'john@example.com',
+        'token'           => 'old-token',
+        'refresh_token'   => 'old-refresh',
     ]);
 
     app(ResolveSocialIdentity::class)->execute(

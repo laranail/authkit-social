@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\AuthKit\Social\Actions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Simtabi\Laranail\AuthKit\Support\TokenResult;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
 use Simtabi\Laranail\AuthKit\Contracts\IssueTokenForUserInterface;
 use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
 use Simtabi\Laranail\AuthKit\Social\Contracts\StatelessSocialCallbackInterface;
-use Simtabi\Laranail\AuthKit\Support\TokenResult;
 
 /**
  * Completes a social sign-in for a client with no session, and returns an API token.
@@ -75,7 +75,7 @@ class StatelessSocialCallback implements StatelessSocialCallbackInterface
 
         return $this->issuer->execute(
             user: $user,
-            name: $tokenName ?? 'api-social-'.$provider->slug(),
+            name: $tokenName ?? 'api-social-' . $provider->slug(),
         );
     }
 }

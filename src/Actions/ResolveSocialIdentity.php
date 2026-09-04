@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Actions;
 
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Laravel\Socialite\AbstractUser;
-use Laravel\Socialite\Contracts\User as SocialiteUser;
-use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
-use Simtabi\Laranail\AuthKit\Social\Contracts\CreateSocialAccountActionInterface;
-use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Simtabi\Laranail\AuthKit\Social\Models\Social;
+use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Simtabi\Laranail\AuthKit\Support\UserModelResolver;
+use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
+use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
+use Simtabi\Laranail\AuthKit\Social\Contracts\CreateSocialAccountActionInterface;
 
 class ResolveSocialIdentity implements ResolveSocialIdentityInterface
 {
@@ -31,9 +31,9 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
 
         if ($social !== null) {
             $social->update([
-                'token' => $socialUser->token,
+                'token'         => $socialUser->token,
                 'refresh_token' => $socialUser->refreshToken,
-                'expires_at' => $socialUser->expiresIn
+                'expires_at'    => $socialUser->expiresIn
                     ? now()->addSeconds($socialUser->expiresIn)
                     : null,
             ]);
@@ -117,10 +117,10 @@ class ResolveSocialIdentity implements ResolveSocialIdentityInterface
         /** @var Model&Authenticatable $user */
         $user = new $userModel;
         $user->forceFill([
-            'name' => $socialUser->getName() ?? $socialUser->getNickname() ?? '',
-            'email' => $email,
+            'name'              => $socialUser->getName() ?? $socialUser->getNickname() ?? '',
+            'email'             => $email,
             'email_verified_at' => now(),
-            'password' => Hash::make(Str::random(32)),
+            'password'          => Hash::make(Str::random(32)),
         ]);
         $user->save();
 
