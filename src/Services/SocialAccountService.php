@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Services;
 
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Simtabi\Laranail\AuthKit\Social\Models\Social;
+use Simtabi\Laranail\AuthKit\Contracts\SocialIdentityProviderInterface;
 
 /**
  * Reads and removes the social accounts linked to a user.

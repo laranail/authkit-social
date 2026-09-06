@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
-use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
-use Simtabi\Laranail\AuthKit\Social\Actions\SocialRedirectAction;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
-use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
-use Simtabi\Laranail\AuthKit\Support\IdentityProvider;
+use Illuminate\Support\Facades\Validator;
 use Simtabi\Laranail\Enumerator\Rules\EnumValue;
+use Simtabi\Laranail\AuthKit\Support\IdentityProvider;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\AuthKit\Social\Actions\SocialRedirectAction;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
+use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
 
 function redirectRequest(string $provider): Request
 {
@@ -82,11 +82,11 @@ it('exposes Enumerator labels and collection helpers without changing provider v
         'paypal',
     ])
         ->and(SocialProvider::labels())->toBe([
-            'google' => 'Google',
-            'apple' => 'Apple',
-            'x' => 'X',
+            'google'   => 'Google',
+            'apple'    => 'Apple',
+            'x'        => 'X',
             'linkedin' => 'LinkedIn',
-            'paypal' => 'PayPal',
+            'paypal'   => 'PayPal',
         ])
         ->and(SocialProvider::collect()->flatValues())->toBe(SocialProvider::values())
         ->and(SocialProvider::GOOGLE->label())->toBe('Google');

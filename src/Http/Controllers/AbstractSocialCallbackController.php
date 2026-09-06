@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\AuthKit\Social\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Simtabi\Laranail\AuthKit\Contracts\LoginUserInterface;
+use Simtabi\Laranail\AuthKit\Support\AuthKit;
 use Simtabi\Laranail\AuthKit\Enums\AuthStatus;
+use Simtabi\Laranail\AuthKit\Support\AuthResult;
+use Simtabi\Laranail\AuthKit\Contracts\LoginUserInterface;
 use Simtabi\Laranail\AuthKit\Http\Controllers\AbstractAuthController;
 use Simtabi\Laranail\AuthKit\Social\Contracts\SocialCallbackActionInterface;
-use Simtabi\Laranail\AuthKit\Support\AuthKit;
-use Simtabi\Laranail\AuthKit\Support\AuthResult;
 
 abstract class AbstractSocialCallbackController extends AbstractAuthController
 {
@@ -28,14 +28,14 @@ abstract class AbstractSocialCallbackController extends AbstractAuthController
             return match ($result->status) {
                 AuthStatus::Passed => $this->jsonResponse(status: 'passed', data: ['user' => $result->user]),
                 AuthStatus::Failed => $this->jsonResponse(status: 'failed', data: ['message' => 'Social authentication failed.'], code: 422),
-                default => $this->jsonResponse(status: 'failed', data: ['message' => 'Social authentication failed.'], code: 422),
+                default            => $this->jsonResponse(status: 'failed', data: ['message' => 'Social authentication failed.'], code: 422),
             };
         }
 
         return match ($result->status) {
             AuthStatus::Passed => $this->handlePassed(request: $request, result: $result, loginAction: $loginAction),
             AuthStatus::Failed => $this->failed(request: $request, result: $result),
-            default => $this->failed(request: $request, result: $result),
+            default            => $this->failed(request: $request, result: $result),
         };
     }
 

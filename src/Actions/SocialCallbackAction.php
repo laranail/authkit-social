@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Actions;
 
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
-use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
-use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
-use Simtabi\Laranail\AuthKit\Social\Contracts\SocialCallbackActionInterface;
-use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Simtabi\Laranail\AuthKit\Support\AuthResult;
+use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
+use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
+use Simtabi\Laranail\AuthKit\Social\Contracts\SocialCallbackActionInterface;
+use Simtabi\Laranail\AuthKit\Social\Contracts\ResolveSocialIdentityInterface;
 
 class SocialCallbackAction implements SocialCallbackActionInterface
 {

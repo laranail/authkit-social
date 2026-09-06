@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-use Laravel\Socialite\Two\User as SocialiteUser;
-use Simtabi\Laranail\AuthKit\Social\Actions\CreateSocialAccountAction;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
-use Simtabi\Laranail\AuthKit\Social\Models\Social;
 use Workbench\App\Models\User;
+use Laravel\Socialite\Two\User as SocialiteUser;
+use Simtabi\Laranail\AuthKit\Social\Models\Social;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\AuthKit\Social\Actions\CreateSocialAccountAction;
 
 it(description: 'creates a social account with morph', closure: function (): void {
     $user = User::factory()->create();
 
     $socialiteUser = new SocialiteUser;
     $socialiteUser->map(attributes: [
-        'id' => 'google-123',
-        'name' => 'John Doe',
+        'id'       => 'google-123',
+        'name'     => 'John Doe',
         'nickname' => 'johndoe',
-        'email' => 'john@example.com',
-        'avatar' => 'https://example.com/avatar.jpg',
+        'email'    => 'john@example.com',
+        'avatar'   => 'https://example.com/avatar.jpg',
     ]);
     $socialiteUser->token = 'mock-token';
     $socialiteUser->refreshToken = 'mock-refresh-token';
@@ -48,7 +48,7 @@ it(description: 'morph relationship returns parent model', closure: function ():
 
     $socialiteUser = new SocialiteUser;
     $socialiteUser->map(attributes: [
-        'id' => 'google-456',
+        'id'    => 'google-456',
         'email' => 'jane@example.com',
     ]);
 
@@ -68,7 +68,7 @@ it(description: 'stores encrypted tokens', closure: function (): void {
 
     $socialiteUser = new SocialiteUser;
     $socialiteUser->map(attributes: [
-        'id' => 'google-789',
+        'id'    => 'google-789',
         'email' => 'token@example.com',
     ]);
     $socialiteUser->token = 'my-secret-token';
@@ -94,7 +94,7 @@ it(description: 'handles null expires_at', closure: function (): void {
 
     $socialiteUser = new SocialiteUser;
     $socialiteUser->map(attributes: [
-        'id' => 'google-no-exp',
+        'id'    => 'google-no-exp',
         'email' => 'noexpire@example.com',
     ]);
     $socialiteUser->expiresIn = null;

@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\AuthKit\Social\Providers;
 
 use Illuminate\Support\Facades\Event;
-use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
-use Simtabi\Laranail\AuthKit\Social\Actions;
-use Simtabi\Laranail\AuthKit\Social\Contracts;
-use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
-use Simtabi\Laranail\AuthKit\Social\Services;
 use Simtabi\Laranail\Package\Tools\Package;
-use Simtabi\Laranail\Package\Tools\Providers\PackageServiceProvider;
+use Simtabi\Laranail\AuthKit\Social\Actions;
+use Simtabi\Laranail\AuthKit\Social\Services;
+use Simtabi\Laranail\AuthKit\Social\Contracts;
 use SocialiteProviders\Apple\AppleExtendSocialite;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use Simtabi\Laranail\AuthKit\Social\Enums\SocialProvider;
+use Simtabi\Laranail\Package\Tools\Providers\PackageServiceProvider;
+use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
 
 /**
  * Social login for laranail/authkit.

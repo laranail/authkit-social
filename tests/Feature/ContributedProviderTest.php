@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use Laravel\Socialite\Facades\Socialite;
-use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
-use Simtabi\Laranail\AuthKit\Social\Services\PayPalSocialProvider;
-use Simtabi\Laranail\AuthKit\Support\IdentityProvider;
 use SocialiteProviders\Manager\SocialiteWasCalled;
+use Simtabi\Laranail\AuthKit\Support\IdentityProvider;
+use Simtabi\Laranail\AuthKit\Social\Services\PayPalSocialProvider;
+use Simtabi\Laranail\AuthKit\Contracts\IdentityProviderRegistryInterface;
 
 it('binds the Socialite driver of a provider that supplies one', function (): void {
     // Registering with the registry and binding the Socialite driver used to be separate steps, and
@@ -20,9 +20,9 @@ it('binds the Socialite driver of a provider that supplies one', function (): vo
     ));
 
     config()->set('services.acme', [
-        'client_id' => 'id',
+        'client_id'     => 'id',
         'client_secret' => 'secret',
-        'redirect' => 'https://example.test/cb',
+        'redirect'      => 'https://example.test/cb',
     ]);
 
     // SocialiteWasCalled fires once, inside app->booted(). A sub-package registering during its
@@ -44,9 +44,9 @@ it('binds under the provider’s driver key, not its slug', function (): void {
     ));
 
     config()->set('services.acme-oidc', [
-        'client_id' => 'id',
+        'client_id'     => 'id',
         'client_secret' => 'secret',
-        'redirect' => 'https://example.test/cb',
+        'redirect'      => 'https://example.test/cb',
     ]);
 
     event(app(SocialiteWasCalled::class));

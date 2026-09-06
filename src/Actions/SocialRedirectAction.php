@@ -6,9 +6,9 @@ namespace Simtabi\Laranail\AuthKit\Social\Actions;
 
 use Illuminate\Http\Request;
 use Laravel\Socialite\Contracts\Factory as SocialiteFactory;
-use Simtabi\Laranail\AuthKit\Social\Contracts\SocialRedirectActionInterface;
-use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
 use Simtabi\Laranail\AuthKit\Social\Support\SocialRedirectResult;
+use Simtabi\Laranail\AuthKit\Social\Support\ResolvesIdentityProvider;
+use Simtabi\Laranail\AuthKit\Social\Contracts\SocialRedirectActionInterface;
 
 class SocialRedirectAction implements SocialRedirectActionInterface
 {

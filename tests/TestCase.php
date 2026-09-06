@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\AuthKit\Social\Tests;
 
+use Workbench\App\Models\User;
 use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Laravel\Socialite\SocialiteServiceProvider;
+use SocialiteProviders\Manager\ServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Simtabi\Laranail\AuthKit\Providers\AuthKitServiceProvider;
 use Simtabi\Laranail\AuthKit\Social\Providers\SocialServiceProvider;
-use SocialiteProviders\Manager\ServiceProvider;
-use Workbench\App\Models\User;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -41,9 +41,9 @@ abstract class TestCase extends BaseTestCase
         $app['config']->set('app.key', 'base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=');
         $app['config']->set('database.default', 'testing');
         $app['config']->set('database.connections.testing', [
-            'driver' => 'sqlite',
-            'database' => ':memory:',
-            'prefix' => '',
+            'driver'                  => 'sqlite',
+            'database'                => ':memory:',
+            'prefix'                  => '',
             'foreign_key_constraints' => true,
         ]);
 
@@ -52,9 +52,9 @@ abstract class TestCase extends BaseTestCase
 
     protected function defineDatabaseMigrations(): void
     {
-        $this->loadMigrationsFrom(dirname(__DIR__).'/vendor/orchestra/testbench-core/laravel/migrations');
-        $this->loadMigrationsFrom(dirname(__DIR__).'/vendor/laravel/fortify/database/migrations');
-        $this->loadMigrationsFrom(dirname(__DIR__).'/vendor/laravel/sanctum/database/migrations');
-        $this->loadMigrationsFrom(dirname(__DIR__).'/database/migrations/social');
+        $this->loadMigrationsFrom(dirname(__DIR__) . '/vendor/orchestra/testbench-core/laravel/migrations');
+        $this->loadMigrationsFrom(dirname(__DIR__) . '/vendor/laravel/fortify/database/migrations');
+        $this->loadMigrationsFrom(dirname(__DIR__) . '/vendor/laravel/sanctum/database/migrations');
+        $this->loadMigrationsFrom(dirname(__DIR__) . '/database/migrations/social');
     }
 }
