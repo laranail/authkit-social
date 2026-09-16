@@ -9,6 +9,18 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Fixed
 
+- **The declared floor for `socialiteproviders/manager` did not work.** The manifest said `^4.4`;
+  every driver throws `TypeError: array_keys(): Argument #1 must be of type array, string given`
+  on anything below 4.10. In 4.9.0 the closure `SocialiteWasCalled::extendSocialite()` hands to
+  `$socialite->extend()` calls `$this->buildProvider(...)`, and Laravel's `Manager::extend()`
+  rebinds a custom-driver callback to the manager — so `$this` is the `SocialiteManager`, and its
+  own two-argument `buildProvider($provider, $config)` receives the provider *name* where a config
+  array belongs. 4.10.0 captures `$extendSocialiteBy = $this` first, which is immune to the
+  rebinding. Floor raised to `^4.10`.
+
+  Nothing in the suite could see this until `--prefer-lowest` landed: a normal install resolves the
+  newest 4.x and passes.
+
 - **A registry-contributed provider could not be signed in with.** `Social::$casts` cast `provider`
   straight to the `SocialProvider` enum, so storing or reading a slug with no enum case threw
   `ValueError: "okta" is not a valid backing value`. A sub-package could register a provider, render
