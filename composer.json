@@ -32,8 +32,8 @@
         "laranail/package-tools": "^0.1",
         "laravel/framework": "^13.0",
         "laravel/socialite": "^5.0",
-        "socialiteproviders/apple": "^5.10 || ^6.0",
-        "socialiteproviders/manager": "^4.4"
+        "socialiteproviders/apple": "^5.10",
+        "socialiteproviders/manager": "^4.10"
     },
     "require-dev": {
         "pestphp/pest": "^4.0",
