@@ -3,7 +3,7 @@
 [![Tests](https://img.shields.io/github/actions/workflow/status/laranail/authkit-social/tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/laranail/authkit-social/actions/workflows/tests.yml)
 [![License MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
-`laranail/authkit-social` is not published to Packagist, so there is no registry-version badge to show — see [Install](#install).
+`laranail/authkit-social` is not published to Packagist, so there is no registry-version badge to show: see [Install](#install).
 
 > Social login for the authkit family: Socialite-backed providers, identity linking and account provisioning.
 
